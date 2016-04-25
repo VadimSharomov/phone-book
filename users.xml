@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class>
+   <user id="1">
+   <idsession>0</idsession>
+      <fullname>Ivanov Petr Fedorovich</fullname>
+      <login>student</login>
+      <password>11111</password>
+   </user>
+   <user id="2">
+   <idsession>0</idsession>
+      <fullname>Petrov Ivan Petrovich</fullname>
+      <login>petrov</login>
+      <password>12345</password>
+   </user>
+   <user id="3">
+	<idsession>0</idsession>
+      <fullname>Sidorov Stepan Semonovich</fullname>
+      <login>sidorov</login>
+      <password>12345</password>
+   </user>
+   <user id="4">
+		<idsession>0</idsession>
+      <fullname>Natalia Mukolaivna Sharomova</fullname>
+	  <login>nata</login>
+	  <password>12345</password>
+   </user>
+   <user id="5">
+		<idsession>0</idsession>
+      <fullname>Ivanov Ivan Petrovich</fullname>
+	  <login>ivan</login>
+	  <password>12345</password>
+   </user>
+<user id="6"><idsession>1461475478779</idsession><fullname>Ivanov Ivan Petrovich</fullname><login>nat</login><password>12345</password></user><user id="7"><idsession>1461475529403</idsession><fullname>Ivanov Ivan Petrovich</fullname><login>nati</login><password>12345</password></user><user id="8"><idsession>1461475650547</idsession><fullname>SDFGDSDF</fullname><login>fdgdsadfgd</login><password>fgdsdfgds</password></user><user id="9"><idsession>1461475906240</idsession><fullname>ffdgsdasfg</fullname><login>dfgdsfg</login><password>dfhgfdsdsfgds</password></user><user id="10"><idsession>1461475954261</idsession><fullname>dfgsaSDFGDS</fullname><login>SDGFDSAawesrdf</login><password>FHDEESDREW</password></user><user id="11"><idsession>1461475992106</idsession><fullname>fgdghfg</fullname><login>JHGFDHFGfghdf</login><password>hgdfhgdf</password></user><user id="12"><idsession>1461476392153</idsession><fullname>fdggfds</fullname><login>fdgdsgdshgfdsgd</login><password>fdghfgd</password></user><user id="13"><idsession>1461476450612</idsession><fullname>dfghfdsadfgh</fullname><login>sdfgdssdfhgdsa</login><password>sdfgdsfg</password></user><user id="14"><idsession>1461480074556</idsession><fullname>sdfsadfg</fullname><login>sdfgdsafghfdsa</login><password>DFGAsdfgds</password></user><user id="15"><idsession>1461480284522</idsession><fullname>fhfdhfd</fullname><login>dgfhjhdgfdghfhfghfhfg</login><password>dhghfdhfghfd</password></user><user id="16"><idsession>1461480400084</idsession><fullname>gdgsdrgsd</fullname><login>dgsSDgsdfgsdg</login><password>dsgdsrgsgrsdr</password></user><user id="17"><idsession>1461480522204</idsession><fullname>gsetgsetg</fullname><login>yugfyusrtershtd</login><password>sdthsrthsehset</password></user><user id="18"><idsession>1461480605586</idsession><fullname>dsfgdfsgfdg</fullname><login>sdfgsdfgsdfg</login><password>sdfgsdfgsdfg</password></user><user id="19"><idsession>1461530680169</idsession><fullname>hghghgffg</fullname><login>tssdtsd</login><password>sertgthrd</password></user><user id="20"><idsession>1461531516709</idsession><fullname>dsfafsafs</fullname><login>hsgrfaweferw</login><password>ergergtgtr</password></user></class>
