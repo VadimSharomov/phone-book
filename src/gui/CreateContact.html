@@ -17,6 +17,9 @@
                 location.reload(true);
             }
         }
+        function clearlabel() {
+            sessionStorage.removeItem("whenloading");
+        }
     </script>
 </head>
 <body>
@@ -34,7 +37,7 @@
 
     <h2>Phone book</h2>
     <p></p>
-    <form class="form-inline" action="http://myipaddress:8080/updatecontact" method="post">
+    <form id="createcont" class="form-inline" action="http://myipaddress:8080/updatecontact" method="post">
         <div class="form-group">
             <label for="lastName">Last name:</label>
             <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter last name">
@@ -66,13 +69,18 @@
         <input type="hidden" name="iduser" value="idUser"/>
         <input type="hidden" name="idsession" value="idSessionValue"/>
         <input type="hidden" name="idContact" value="idContact"/>
-        <button type="submit" class="btn btn-default">
+        <button type="submit" class="btn btn-default" onclick="clearlabel()">
             <span class="glyphicon glyphicon-pencil"></span> Create
         </button>
         <!--WarningMessage_DoNotRemoveThis-->
     </form>
 
 </div>
-
+<script>
+    if (typeof(Storage) !== "undefined") {
+        if (sessionStorage.getItem("whenloading") != null) {
+            document.getElementById("createcont").reset();
+        }
+    }</script>
 </body>
 </html>
