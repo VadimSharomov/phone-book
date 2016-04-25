@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Created by Vadim on 20.04.2016.
+ *
  */
 public class UserDAOXML implements UserDAO {
     private String pathToFileDB;
@@ -37,14 +38,14 @@ public class UserDAOXML implements UserDAO {
 
     public void setTypeDB(String pathToFileDB) {
         this.pathToFileDB = pathToFileDB;
+        this.inputFile = new File(pathToFileDB + "users.xml");
+        this.pathToNode = "/class/user";
         File file = new File(pathToFileDB + "users.xml");
         if (!file.exists()) {
             Document newDocument = DocumentHelper.createDocument();
             Element root = newDocument.addElement("class");
             saveDocument(newDocument);
         }
-        this.inputFile = new File(pathToFileDB + "users.xml");
-        this.pathToNode = "/class/user";
         try {
             document = reader.read(inputFile);
         } catch (DocumentException e) {

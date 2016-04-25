@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import services.ContactService;
 import services.UserService;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +38,10 @@ public class RestControl {
     private static final String PATTERN_STATIONARY_PHONE_UKR = "[+][3][8][0][(][3456][0-9][)][0-9]{7}";
     private static final String PATTERN_EMAIL = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
     private ArrayList<Long> initIdSessionList = new ArrayList<>();
+    private static String homePageFile = "HomePage.html";
+    private static String registrationPageFile = "RegistrationPage.html";
+    private static String viewContactsPageFile = "ViewContact.html";
+    private static String createContactPageFile = "CreateContact.html";
 
     {
         try {
@@ -54,13 +59,23 @@ public class RestControl {
             List<String> listArgs = args.getNonOptionArgs();
             try {
                 if (listArgs.size() == 0) {
-                    System.out.println("\nIn arguments JVM not found the path to file.properties!");
+                    System.out.println("\nIn arguments JVM not found the path to file.properties!\n");
                     System.exit(1);
                 }
                 String pathToConfigFile = listArgs.get(0);
+                if (!(new File(pathToConfigFile)).exists()) {
+                    System.out.println("\nIn arguments JVM is incorrect path to file.properties!\n");
+                    System.exit(1);
+                }
+
                 InputStream input = new FileInputStream(pathToConfigFile);
                 properties.load(input);
                 pathToHTMLFiles = properties.getProperty("pathHTMLFiles");
+
+                if (!(new File(pathToHTMLFiles + homePageFile)).exists()) {
+                    System.out.println("\nIn file.properties is incorrect 'pathHTMLFiles'!\n");
+                    System.exit(1);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -95,11 +110,11 @@ public class RestControl {
     private String homePageHTML() {
         try {
 
-            return new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, "HomePage.html"))).replace("myipaddress", myIP).replace("idSessionValue", String.valueOf(generateIdSession()));
+            return new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, homePageFile))).replace("myipaddress", myIP).replace("idSessionValue", String.valueOf(generateIdSession()));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "File not found: HomePage.html to path 'pathHTMLFiles' in file.properties: " + pathToHTMLFiles;
+        return "File not found: " + homePageFile + " to path 'pathHTMLFiles' in file.properties: " + pathToHTMLFiles;
     }
 
     private long generateIdSession() {
@@ -212,11 +227,11 @@ public class RestControl {
 
     private String registrationPageHTML(String idSession) {
         try {
-            return new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, "RegistrationPage.html"))).replace("myipaddress", myIP).replace("idSessionValue", idSession);
+            return new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, registrationPageFile))).replace("myipaddress", myIP).replace("idSessionValue", idSession);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "File not found: RegistrationPage.html in path: " + pathToHTMLFiles;
+        return "File not found: " + registrationPageFile + " in path: " + pathToHTMLFiles;
     }
 
     @RequestMapping("/view")
@@ -241,7 +256,7 @@ public class RestControl {
             });
         }
         try {
-            String page = new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, "ViewContact.html"))).replace("myipaddress", myIP).replace("idUser", idUser).replace("userLogin", user.getLogin()).replace("idSessionValue", String.valueOf(user.getIdSession()));
+            String page = new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, viewContactsPageFile))).replace("myipaddress", myIP).replace("idUser", idUser).replace("userLogin", user.getLogin()).replace("idSessionValue", String.valueOf(user.getIdSession()));
 
             StringBuilder sb = new StringBuilder();
             for (Contact con : contacts) {
@@ -261,7 +276,7 @@ public class RestControl {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "File not found: ViewContact.html in path: " + pathToHTMLFiles;
+        return "File not found: " + viewContactsPageFile + " in path: " + pathToHTMLFiles;
     }
 
     @RequestMapping("/find")
@@ -310,7 +325,7 @@ public class RestControl {
         } else {
             Contact contact = ContactService.getInstance().getById(idContacts[0]);
             try {
-                page.append(new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, "CreateContact.html"))).replace("myipaddress", myIP).replace("idUser", idUser).replace("userLogin", user.getLogin()).replace("idSessionValue", String.valueOf(user.getIdSession())));
+                page.append(new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, createContactPageFile))).replace("myipaddress", myIP).replace("idUser", idUser).replace("userLogin", user.getLogin()).replace("idSessionValue", String.valueOf(user.getIdSession())));
 
                 page.replace(page.indexOf("name=\"lastName\""), page.indexOf("name=\"lastName\"") + "name=\"lastName\"".length(), "name=\"lastName\"".concat(" value=\"").concat(contact.getLastName()).concat("\""));
                 page.replace(page.indexOf("name=\"name\""), page.indexOf("name=\"name\"") + "name=\"name\"".length(), "name=\"name\"".concat(" value=\"").concat(contact.getName()).concat("\""));
@@ -340,11 +355,11 @@ public class RestControl {
 
         User user = UserService.getInstance().getById(idUser);
         try {
-            return new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, "CreateContact.html"))).replace("myipaddress", myIP).replace("idUser", idUser).replace("userLogin", user.getLogin()).replace("idSessionValue", String.valueOf(user.getIdSession()));
+            return new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, createContactPageFile))).replace("myipaddress", myIP).replace("idUser", idUser).replace("userLogin", user.getLogin()).replace("idSessionValue", String.valueOf(user.getIdSession()));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "File not found: CreateContact.html in path: " + pathToHTMLFiles;
+        return "File not found: " + createContactPageFile + " in path: " + pathToHTMLFiles;
     }
 
     @RequestMapping("/updatecontact")

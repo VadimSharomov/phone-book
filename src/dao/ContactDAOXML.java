@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Created by Vadim on 20.04.2016.
+ *
  */
 public class ContactDAOXML implements ContactDAO {
     private String pathToFileDB;
@@ -38,13 +39,13 @@ public class ContactDAOXML implements ContactDAO {
     public void setTypeDB(String pathToFileDB) {
         this.pathToFileDB = pathToFileDB;
         File file = new File(pathToFileDB + "contacts.xml");
+        this.inputFile = new File(pathToFileDB + "contacts.xml");
+        this.pathToNode = "/class/contact";
         if (!file.exists()) {
             Document newDocument = DocumentHelper.createDocument();
             Element root = newDocument.addElement("class");
             saveDocument(newDocument);
         }
-        this.inputFile = new File(pathToFileDB + "contacts.xml");
-        this.pathToNode = "/class/contact";
         try {
             document = reader.read(inputFile);
         } catch (DocumentException e) {
