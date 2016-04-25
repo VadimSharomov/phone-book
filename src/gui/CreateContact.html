@@ -19,6 +19,7 @@
         }
         function clearlabel() {
             sessionStorage.removeItem("whenloading");
+//                document.getElementById("createcont").reset();
         }
     </script>
 </head>
@@ -74,13 +75,6 @@
         </button>
         <!--WarningMessage_DoNotRemoveThis-->
     </form>
-
 </div>
-<script>
-    if (typeof(Storage) !== "undefined") {
-        if (sessionStorage.getItem("whenloading") != null) {
-            document.getElementById("createcont").reset();
-        }
-    }</script>
 </body>
 </html>
