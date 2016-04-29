@@ -2,9 +2,6 @@
 <html lang="en">
 <head>
     <title>View contact</title>
-    <meta http-equiv='cache-control' content='no-cache'/>
-    <meta http-equiv='expires' content='0'/>
-    <meta http-equiv='pragma' content='no-cache'/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -17,7 +14,7 @@
                 sessionStorage.setItem("whenloading", ns);
             } else {
                 sessionStorage.removeItem("whenloading");
-                location.reload(true);
+                window.location="http://myipaddress:8080/view?iduser=idUser&idsession=idSessionValue";
             }
         }
 
@@ -138,6 +135,5 @@
         </tbody>
     </table>
 </div>
-
 </body>
 </html>

@@ -240,6 +240,9 @@ public class RestControl {
             @RequestParam(value = "idsession", required = false) String idSession,
             @RequestParam(value = "contacts", required = false) List<Contact> contacts) {
 
+        if (!idUser.matches("[0-9]+")) {
+            return showWarning(homePageHTML(), "Session is over, you need to login!");
+        }
         User user = UserService.getInstance().getById(idUser);
         if (contacts == null) {
             if (user.getIdSession() != Long.parseLong(idSession)) {
