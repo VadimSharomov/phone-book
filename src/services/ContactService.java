@@ -1,5 +1,6 @@
 package services;
 
+import dao.ContactDAOJSON;
 import dao.ContactDAOXML;
 import dao.ContactDAOmySQL;
 import entity.Contact;
@@ -32,8 +33,11 @@ public class ContactService {
         } else if ("xml".equals(typeDB.toLowerCase())) {
             ContactDAOXML.getInstance().setTypeDB(pathToFileDB);
             this.dao = ContactDAOXML.getInstance();
+        } else if ("json".equals(typeDB.toLowerCase())) {
+            ContactDAOJSON.getInstance().setTypeDB(pathToFileDB);
+            this.dao = ContactDAOJSON.getInstance();
         } else {
-            System.out.println("\nType data base is not known: " + typeDB + "! Refer parameter 'typeDB' in config file\n");
+            System.out.println("\nClass " + this.getClass().getName() + ": Type data base is not known: " + typeDB + "! Refer parameter 'typeDB' in config file\n");
             System.exit(1);
         }
     }

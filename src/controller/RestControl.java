@@ -299,7 +299,13 @@ public class RestControl {
         }
         List<Contact> contacts = ContactService.getInstance().getByIdUserAndName(idUser, lastName, name, mobilePhone);
 
-        return viewContacts(idUser, idSession, contacts).replace("name=\"lastname\"", "name=\"lastname\" value=\"" + lastName + "\"").replace("name=\"name\"", "name=\"name\" value=\"" + name + "\"").replace("name=\"mobilePhone\"", "name=\"mobilePhone\" value=\"" + mobilePhone + "\"");
+        return viewContacts(idUser, idSession, contacts).
+                replace("name=\"lastname\"", "name=\"lastname\" value=\"" + lastName + "\"").
+                replace("name=\"name\"", "name=\"name\" value=\"" + name + "\"").
+                replace("name=\"mobilePhone\"", "name=\"mobilePhone\" value=\"" + mobilePhone + "\"").
+                replace("lastname=lastnameValue", "lastname=" + lastName).
+                replace("name=nameValue", "name=" + name).
+                replace("mobilePhone=mobilePhoneValue", "mobilePhone=" + mobilePhone);
     }
 
 

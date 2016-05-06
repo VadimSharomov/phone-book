@@ -1,5 +1,6 @@
 package services;
 
+import dao.UserDAOJSON;
 import dao.UserDAOXML;
 import dao.UserDAOmySQL;
 import entity.User;
@@ -10,7 +11,6 @@ import java.util.ArrayList;
 
 /**
  * Created by Vadim on 14.04.2016.
- *
  */
 public class UserService {
     private UserDAO dao;
@@ -33,8 +33,11 @@ public class UserService {
         } else if ("xml".equals(typeDB.toLowerCase())) {
             UserDAOXML.getInstance().setTypeDB(pathToFileDB);
             this.dao = UserDAOXML.getInstance();
+        } else if ("json".equals(typeDB.toLowerCase())) {
+            UserDAOJSON.getInstance().setTypeDB(pathToFileDB);
+            this.dao = UserDAOJSON.getInstance();
         } else {
-            System.out.println("\nType data base is not known: " + typeDB + ". Refer parameter 'typeDB' in config file.\n");
+            System.out.println("\nClass " + this.getClass().getName() + ": Type data base is not known: " + typeDB + ". Refer parameter 'typeDB' in config file.\n");
             System.exit(1);
         }
     }

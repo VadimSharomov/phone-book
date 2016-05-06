@@ -87,6 +87,10 @@ public class Contact {
         this.userId = userId;
     }
 
+    public long getUserId() {
+        return userId;
+    }
+
     @Override
     public String toString() {
         return "Contact: " + userId + " " + lastName + " " + name + " " + middleName + " " + mobilePhone + " " + address + " " + email;

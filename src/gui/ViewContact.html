@@ -14,7 +14,11 @@
                 sessionStorage.setItem("whenloading", ns);
             } else {
                 sessionStorage.removeItem("whenloading");
-                window.location="http://myipaddress:8080/view?iduser=idUser&idsession=idSessionValue";
+                if ((document.getElementById("lastName").innerHTML.length > 0) || (document.getElementById("name").innerHTML.length > 0) || (document.getElementById("mobilePhone").innerHTML.length > 0)) {
+                    window.location = "http://myipaddress:8080/find?iduser=idUser&idsession=idSessionValue&lastname=lastnameValue&name=nameValue&mobilePhone=mobilePhoneValue";
+                } else {
+                    window.location = "http://myipaddress:8080/view?iduser=idUser&idsession=idSessionValue";
+                }
             }
         }
 

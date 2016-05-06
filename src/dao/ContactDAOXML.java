@@ -94,7 +94,10 @@ public class ContactDAOXML implements ContactDAO {
         Element classElement = document.getRootElement();
         List<Node> nodes = document.selectNodes(pathToNode);
         for (Node node : nodes) {
-            if (node.selectSingleNode("iduser").getText().toLowerCase().contains(idUser.toLowerCase()) && node.selectSingleNode("lastname").getText().toLowerCase().contains(lastName.toLowerCase()) && node.selectSingleNode("name").getText().toLowerCase().contains(name.toLowerCase()) && node.selectSingleNode("mobilephone").getText().toLowerCase().contains(mobilePhone.toLowerCase())) {
+            if (node.selectSingleNode("iduser").getText().toLowerCase().contains(idUser.toLowerCase()) &&
+                    node.selectSingleNode("lastname").getText().toLowerCase().contains(lastName.toLowerCase()) &&
+                    node.selectSingleNode("name").getText().toLowerCase().contains(name.toLowerCase()) &&
+                    node.selectSingleNode("mobilephone").getText().contains(mobilePhone)) {
                 contacts.add(getContactFromNode(node));
             }
         }
