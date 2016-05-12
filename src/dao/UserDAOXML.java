@@ -1,15 +1,10 @@
 package dao;
 
 import entity.User;
-import interfaces.UserDAO;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
-import org.dom4j.io.XMLWriter;
 
-import javax.sql.DataSource;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +12,7 @@ import java.util.List;
  * Created by Vadim on 20.04.2016.
  *
  */
-public class UserDAOXML implements UserDAO {
+public class UserDAOXML extends AbstractDAO {
     private String pathToFileDB;
     private File inputFile;
     private SAXReader reader;
@@ -36,6 +31,7 @@ public class UserDAOXML implements UserDAO {
         return SingleToneHelper.INSTANCE;
     }
 
+    @Override
     public void setTypeDB(String pathToFileDB) {
         this.pathToFileDB = pathToFileDB;
         this.inputFile = new File(pathToFileDB + "users.xml");
@@ -44,7 +40,7 @@ public class UserDAOXML implements UserDAO {
         if (!file.exists()) {
             Document newDocument = DocumentHelper.createDocument();
             Element root = newDocument.addElement("class");
-            saveDocument(newDocument);
+            saveDocument(newDocument, inputFile);
         }
         try {
             document = reader.read(inputFile);
@@ -53,14 +49,10 @@ public class UserDAOXML implements UserDAO {
         }
     }
 
-    @Override
-    public void setDataSource(DataSource dataSource) {
-
-    }
 
     @Override
     public void create(String fullName, String login, String password) {
-        long maxId = getMaxId();
+        long maxId = getMaxId(document, pathToNode);
 
         Element classElement = document.getRootElement();
         Element contact = classElement.addElement("user").addAttribute("id", String.valueOf(maxId + 1));
@@ -68,7 +60,7 @@ public class UserDAOXML implements UserDAO {
         contact.addElement("fullname").addText(fullName);
         contact.addElement("login").addText(login);
         contact.addElement("password").addText(password);
-        saveDocument(document);
+        saveDocument(document, inputFile);
     }
 
     @Override
@@ -100,12 +92,12 @@ public class UserDAOXML implements UserDAO {
         List<Node> nodes = document.selectNodes(pathToNode + "[@id='" + id + "']");
         for (Node node : nodes) {
             node.selectSingleNode("idsession").setText(String.valueOf(idSession));
-            saveDocument(document);
+            saveDocument(document, inputFile);
         }
     }
 
     @Override
-    public User getById(String id) {
+    public User getUserById(String id) {
         Element classElement = document.getRootElement();
         List<Node> nodes = document.selectNodes(pathToNode);
         for (Node node : nodes) {
@@ -126,27 +118,4 @@ public class UserDAOXML implements UserDAO {
         return user;
     }
 
-    private long getMaxId() {
-        long maxId = 0;
-        Element classElement = document.getRootElement();
-        List<Node> nodes = document.selectNodes(pathToNode);
-        for (Node node : nodes) {
-            if (maxId < Long.parseLong(node.valueOf("@id"))) {
-                maxId = Long.parseLong(node.valueOf("@id"));
-            }
-        }
-        return maxId;
-    }
-
-    private void saveDocument(Document document) {
-        try {
-            FileWriter fileWriter = new FileWriter(inputFile);
-            XMLWriter output = new XMLWriter(fileWriter);
-            output.write(document);
-            output.close();
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

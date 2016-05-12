@@ -1,7 +1,6 @@
 package dao;
 
 import entity.Contact;
-import interfaces.ContactDAO;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,7 +12,7 @@ import java.util.List;
  * Created by Vadim on 18.04.2016.
  *
  */
-public class ContactDAOmySQL implements ContactDAO {
+public class ContactDAOmySQL extends AbstractDAO {
     private String table;
     private JdbcTemplate jdbcTemplateObject;
 
@@ -35,7 +34,7 @@ public class ContactDAOmySQL implements ContactDAO {
     }
 
     @Override
-    public Contact getById(String id) {
+    public Contact getContactById(String id) {
         String SQL = "SELECT * FROM " + table + " WHERE id = ?";
         try {
             return jdbcTemplateObject.queryForObject(SQL,

@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Created by Vadim on 18.04.2016.
+ *
  */
 public class ContactService {
     private ContactDAO dao;
@@ -47,7 +48,7 @@ public class ContactService {
     }
 
     public Contact getById(String idContact) {
-        return dao.getById(idContact);
+        return dao.getContactById(idContact);
     }
 
     public List<Contact> getByIdUser(String idUser) {

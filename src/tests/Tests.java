@@ -31,10 +31,10 @@ public class Tests {
     public void testUserDAOXMLgetById() {
         UserDAOXML mock = mock(UserDAOXML.class);
         User user = new User();
-        when(mock.getById("1")).thenReturn(user);
-        when(mock.getById("a")).thenReturn(null);
-        assertEquals(user, mock.getById("1"));
-        assertEquals(null, mock.getById("a"));
+        when(mock.getUserById("1")).thenReturn(user);
+        when(mock.getUserById("a")).thenReturn(null);
+        assertEquals(user, mock.getUserById("1"));
+        assertEquals(null, mock.getUserById("a"));
     }
 
     @Test
@@ -47,12 +47,6 @@ public class Tests {
     public void testUserDAOXMLupdateIdSession() {
         UserDAOXML mock = mock(UserDAOXML.class);
         doThrow(new RuntimeException()).when(mock).updateIdSession(1, 1);
-    }
-
-    @Test
-    public void testUserDAOXMLsetDataSource() {
-        UserDAOXML mock = mock(UserDAOXML.class);
-        doThrow(new RuntimeException()).when(mock).setDataSource(new DataSource());
     }
 
     @SuppressWarnings("Duplicates")
@@ -99,10 +93,10 @@ public class Tests {
     public void testUserDAOmySQLGetById() {
         UserDAOmySQL mock = mock(UserDAOmySQL.class);
         User user = new User();
-        when(mock.getById("1")).thenReturn(user);
-        when(mock.getById("a")).thenReturn(null);
-        assertEquals(user, mock.getById("1"));
-        assertEquals(null, mock.getById("a"));
+        when(mock.getUserById("1")).thenReturn(user);
+        when(mock.getUserById("a")).thenReturn(null);
+        assertEquals(user, mock.getUserById("1"));
+        assertEquals(null, mock.getUserById("a"));
     }
 
     @Test
@@ -131,10 +125,10 @@ public class Tests {
     public void testUserDAOJSONGetById() {
         UserDAOJSON mock = mock(UserDAOJSON.class);
         User user = new User();
-        when(mock.getById("1")).thenReturn(user);
-        when(mock.getById("a")).thenReturn(null);
-        assertEquals(user, mock.getById("1"));
-        assertEquals(null, mock.getById("a"));
+        when(mock.getUserById("1")).thenReturn(user);
+        when(mock.getUserById("a")).thenReturn(null);
+        assertEquals(user, mock.getUserById("1"));
+        assertEquals(null, mock.getUserById("a"));
     }
 
     @Test
@@ -147,12 +141,6 @@ public class Tests {
     public void testUserDAOJSONUpdateIdSession() {
         UserDAOJSON mock = mock(UserDAOJSON.class);
         doThrow(new RuntimeException()).when(mock).updateIdSession(1, 1);
-    }
-
-    @Test
-    public void testUserDAOJSONSetDataSource() {
-        UserDAOJSON mock = mock(UserDAOJSON.class);
-        doThrow(new RuntimeException()).when(mock).setDataSource(new DataSource());
     }
 
     @SuppressWarnings("Duplicates")
@@ -196,19 +184,13 @@ public class Tests {
     }
 
     @Test
-    public void testContactDAOXMLsetDataSource() {
-        ContactDAOXML mock = mock(ContactDAOXML.class);
-        doThrow(new RuntimeException()).when(mock).setDataSource(new DataSource());
-    }
-
-    @Test
     public void testContactDAOXMLgetById() {
         ContactDAOXML mock = mock(ContactDAOXML.class);
         Contact contact = new Contact();
-        when(mock.getById("1")).thenReturn(contact);
-        when(mock.getById("a")).thenReturn(null);
-        assertEquals(contact, mock.getById("1"));
-        assertEquals(null, mock.getById("a"));
+        when(mock.getContactById("1")).thenReturn(contact);
+        when(mock.getContactById("a")).thenReturn(null);
+        assertEquals(contact, mock.getContactById("1"));
+        assertEquals(null, mock.getContactById("a"));
     }
 
     @Test
@@ -263,10 +245,10 @@ public class Tests {
     public void testContactDAOmySQLgetById() {
         ContactDAOmySQL mock = mock(ContactDAOmySQL.class);
         Contact contact = new Contact();
-        when(mock.getById("1")).thenReturn(contact);
-        when(mock.getById("a")).thenReturn(null);
-        assertEquals(contact, mock.getById("1"));
-        assertEquals(null, mock.getById("a"));
+        when(mock.getContactById("1")).thenReturn(contact);
+        when(mock.getContactById("a")).thenReturn(null);
+        assertEquals(contact, mock.getContactById("1"));
+        assertEquals(null, mock.getContactById("a"));
     }
 
     @Test
@@ -311,19 +293,13 @@ public class Tests {
     }
 
     @Test
-    public void testContactDAOJSONSetDataSource() {
-        ContactDAOJSON mock = mock(ContactDAOJSON.class);
-        doThrow(new RuntimeException()).when(mock).setDataSource(new DataSource());
-    }
-
-    @Test
     public void testContactDAOJSONGetById() {
         ContactDAOJSON mock = mock(ContactDAOJSON.class);
         Contact contact = new Contact();
-        when(mock.getById("1")).thenReturn(contact);
-        when(mock.getById("a")).thenReturn(null);
-        assertEquals(contact, mock.getById("1"));
-        assertEquals(null, mock.getById("a"));
+        when(mock.getContactById("1")).thenReturn(contact);
+        when(mock.getContactById("a")).thenReturn(null);
+        assertEquals(contact, mock.getContactById("1"));
+        assertEquals(null, mock.getContactById("a"));
     }
 
     @Test
@@ -464,7 +440,7 @@ public class Tests {
      */
 
     @Test
-    public void testRESTControlgetMySQLDriverManagerDatasource() {
+    public void testRESTControlGetMySQLDriverManagerDatasource() {
         RestControl.MyBean mock = mock(RestControl.MyBean.class);
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         when(mock.getMySQLDriverManagerDatasource()).thenReturn(driverManagerDataSource);

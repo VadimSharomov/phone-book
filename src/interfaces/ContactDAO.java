@@ -15,7 +15,7 @@ public interface ContactDAO {
 
     void create(String userId, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email);
 
-    Contact getById(String id);
+    Contact getContactById(String id);
 
     List<Contact> getByIdUser(String idUser);
 

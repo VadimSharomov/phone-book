@@ -1,7 +1,6 @@
 package dao;
 
 import entity.User;
-import interfaces.UserDAO;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
  * Created by Vadim on 18.04.2016.
  *
  */
-public class UserDAOmySQL implements UserDAO {
+public class UserDAOmySQL extends AbstractDAO {
     private String table;
     private JdbcTemplate jdbcTemplateObject;
 
@@ -56,7 +55,7 @@ public class UserDAOmySQL implements UserDAO {
     }
 
     @Override
-    public User getById(String id) {
+    public User getUserById(String id) {
         String SQL = "SELECT * FROM " + table + " WHERE id = ?";
         try {
             return jdbcTemplateObject.queryForObject(SQL,

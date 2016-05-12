@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Vadim on 14.04.2016.
+ *
  */
 public class UserService {
     private UserDAO dao;
@@ -51,7 +52,7 @@ public class UserService {
     }
 
     public User getById(String idUser) {
-        return dao.getById(idUser);
+        return dao.getUserById(idUser);
     }
 
     public void openSession(long id, String idSession) {

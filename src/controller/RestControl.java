@@ -31,7 +31,7 @@ import static java.net.InetAddress.getLocalHost;
 @RestController
 public class RestControl {
     private String myIP;
-    private String pathToHTMLFiles;
+    private static String pathToHTMLFiles;
     private Properties properties = new Properties();
     private static final String PATTERN_LOGIN = "[a-z,A-Z]{3,}";
     private static final String PATTERN_MOBILE_PHONE_UKR = "[+][3][8][0][(][3569][0-9][)][0-9]{7}";
@@ -42,6 +42,7 @@ public class RestControl {
     private static String registrationPageFile = "RegistrationPage.html";
     private static String viewContactsPageFile = "ViewContact.html";
     private static String createContactPageFile = "CreateContact.html";
+    private UserService userService = UserService.getInstance();
 
     {
         try {
@@ -89,7 +90,7 @@ public class RestControl {
             dataSource.setUsername(properties.getProperty("userDB"));
             dataSource.setPassword(properties.getProperty("userPasswordDB"));
 
-            UserService.getInstance().setDataSource(dataSource, properties.getProperty("typeDB"), properties.getProperty("pathToDBFiles"));
+            userService.setDataSource(dataSource, properties.getProperty("typeDB"), properties.getProperty("pathToDBFiles"));
             ContactService.getInstance().setDataSource(dataSource, properties.getProperty("typeDB"), properties.getProperty("pathToDBFiles"));
             return dataSource;
         }
@@ -109,17 +110,11 @@ public class RestControl {
 
     private String homePageHTML() {
         try {
-
             return new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, homePageFile))).replace("myipaddress", myIP).replace("idSessionValue", String.valueOf(generateIdSession()));
         } catch (IOException e) {
             e.printStackTrace();
         }
         return "File not found: " + homePageFile + " to path 'pathHTMLFiles' in file.properties: " + pathToHTMLFiles;
-    }
-
-    private long generateIdSession() {
-        initIdSessionList.add(System.currentTimeMillis());
-        return initIdSessionList.get(initIdSessionList.size() - 1);
     }
 
     @RequestMapping("/login")
@@ -139,7 +134,7 @@ public class RestControl {
             return showWarning(homePageHTML(), "Password is to short!");
         }
 
-        User user = UserService.getInstance().getByLogin(login);
+        User user = userService.getByLogin(login);
         if (user == null) {
             return registrationPageHTML(idSession).replace("idSessionValue", String.valueOf(idSession));
         }
@@ -147,7 +142,8 @@ public class RestControl {
         if (!password.equals(user.getPassword())) {
             return showWarning(homePageHTML(), "Password is incorrect!");
         }
-        UserService.getInstance().openSession(user.getId(), idSession);
+
+        userService.openSession(user.getId(), idSession);
         return viewContacts(String.valueOf(user.getId()), idSession, null).replace("idSessionValue", String.valueOf(idSession));
     }
 
@@ -161,23 +157,6 @@ public class RestControl {
         return homePageHTML();
     }
 
-    private void closeSession(String idUser, String idSession) {
-        UserService.getInstance().closeSession(Long.parseLong(idUser));
-        if (initIdSessionList.size() != 0) {
-            if (initIdSessionList.indexOf(Long.parseLong(idSession)) >= 0) {
-                initIdSessionList.remove(initIdSessionList.indexOf(Long.parseLong(idSession)));
-            }
-            ArrayList<User> usersList = UserService.getInstance().getAllUsers();
-            boolean canClear = true;
-            for (User usr : usersList) {
-                if (initIdSessionList.contains(usr.getIdSession())) {
-                    canClear = false;
-                }
-            }
-            if (canClear) initIdSessionList.clear();
-        }
-    }
-
     @RequestMapping("/registration")
     public String authorization(
             @RequestParam(value = "name", required = false) String fullName,
@@ -187,7 +166,7 @@ public class RestControl {
 
         if (fullName == null && login == null && password == null) {
             if (idSession == null) {
-                return homePage(idSession);
+                return homePageHTML();
             } else {
                 return registrationPageHTML(idSession);
             }
@@ -209,18 +188,18 @@ public class RestControl {
             return showWarning(registrationPageHTML(idSession), "Password is to short!");
         }
 
-        User user = UserService.getInstance().getByLogin(login);
+        User user = userService.getByLogin(login);
         if (user != null) {
             return showWarning(registrationPageHTML(idSession), "This login already exists!");
         }
-        UserService.getInstance().create(fullName, login, password);
-        user = UserService.getInstance().getByLogin(login);
+        userService.create(fullName, login, password);
+        user = userService.getByLogin(login);
         if (idSession != null) {
             user.setIdSession(Long.parseLong(idSession));
         } else {
             user.setIdSession(generateIdSession());
         }
-        UserService.getInstance().openSession(user.getId(), String.valueOf(user.getIdSession()));
+        userService.openSession(user.getId(), String.valueOf(user.getIdSession()));
 
         return viewContacts(String.valueOf(user.getId()), idSession, null).replace("idSessionValue", String.valueOf(user.getIdSession()));
     }
@@ -243,13 +222,12 @@ public class RestControl {
         if (!idUser.matches("[0-9]+")) {
             return showWarning(homePageHTML(), "Session is over, you need to login!");
         }
-        User user = UserService.getInstance().getById(idUser);
+        User user = userService.getById(idUser);
+        if (isSessionOver(user, idSession)) {
+            return showWarning(homePageHTML(), "Session is over, you need to login!");
+        }
         if (contacts == null) {
-            if (user.getIdSession() != Long.parseLong(idSession)) {
-                return showWarning(homePageHTML(), "Session is over, you need to login!");
-            }
             contacts = ContactService.getInstance().getByIdUser(idUser);
-
             contacts.sort(new Comparator<Contact>() {
                 @Override
                 public int compare(Contact o1, Contact o2) {
@@ -293,8 +271,8 @@ public class RestControl {
         if ((idUser == null) || (idSession == null)) {
             return showWarning(homePageHTML(), "Session is over, you need to login!");
         }
-        User user = UserService.getInstance().getById(idUser);
-        if (user.getIdSession() != Long.parseLong(idSession)) {
+        User user = userService.getById(idUser);
+        if (isSessionOver(user, idSession)) {
             return showWarning(homePageHTML(), "Session is over, you need to login!");
         }
         List<Contact> contacts = ContactService.getInstance().getByIdUserAndName(idUser, lastName, name, mobilePhone);
@@ -308,7 +286,6 @@ public class RestControl {
                 replace("mobilePhone=mobilePhoneValue", "mobilePhone=" + mobilePhone);
     }
 
-
     @RequestMapping("/edit")
     private String editDeleteContact(@RequestParam(value = "iduser", required = false) String idUser,
                                      @RequestParam(value = "idsession", required = false) String idSession,
@@ -319,8 +296,8 @@ public class RestControl {
             return showWarning(homePageHTML(), "Session is over, you need to login!");
         }
 
-        User user = UserService.getInstance().getById(idUser);
-        if (user.getIdSession() != Long.parseLong(idSession)) {
+        User user = userService.getById(idUser);
+        if (isSessionOver(user, idSession)) {
             return showWarning(homePageHTML(), "Session is over, you need to login!");
         }
 
@@ -362,7 +339,7 @@ public class RestControl {
             @RequestParam(value = "login", required = false) String login,
             @RequestParam(value = "password", required = false) String password) {
 
-        User user = UserService.getInstance().getById(idUser);
+        User user = userService.getById(idUser);
         try {
             return new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, createContactPageFile))).replace("myipaddress", myIP).replace("idUser", idUser).replace("userLogin", user.getLogin()).replace("idSessionValue", String.valueOf(user.getIdSession()));
         } catch (IOException e) {
@@ -429,11 +406,35 @@ public class RestControl {
         return viewContacts(idUser, idSession, null);
     }
 
-
     private String showWarning(String page, String message) {
         return page.replace("<!--WarningMessage_DoNotRemoveThis-->", "<div class=\"alert alert-danger\">".concat(
                 "<a href=\"\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a> <strong>".concat(message).concat("</strong></div>")));
     }
 
+    private long generateIdSession() {
+        initIdSessionList.add(System.currentTimeMillis());
+        return initIdSessionList.get(initIdSessionList.size() - 1);
+    }
 
+    private void closeSession(String idUser, String idSession) {
+        userService.closeSession(Long.parseLong(idUser));
+        if (initIdSessionList.size() != 0) {
+            if (initIdSessionList.indexOf(Long.parseLong(idSession)) >= 0) {
+                initIdSessionList.remove(initIdSessionList.indexOf(Long.parseLong(idSession)));
+            }
+            ArrayList<User> usersList = userService.getAllUsers();
+            boolean canClear = true;
+            for (User usr : usersList) {
+                if (initIdSessionList.contains(usr.getIdSession())) {
+                    canClear = false;
+                }
+            }
+            if (canClear) initIdSessionList.clear();
+        }
+    }
+
+
+    private boolean isSessionOver(User user, String idSession) {
+        return (user.getIdSession() != Long.parseLong(idSession));
+    }
 }

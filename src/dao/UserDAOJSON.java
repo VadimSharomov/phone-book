@@ -1,13 +1,11 @@
 package dao;
 
 import entity.User;
-import interfaces.UserDAO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import javax.sql.DataSource;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -16,7 +14,7 @@ import java.util.ArrayList;
  * Created by Vadim on 30.04.2016.
  * Implementation JSON format
  */
-public class UserDAOJSON implements UserDAO {
+public class UserDAOJSON extends AbstractDAO {
     private String pathToFileDB;
     private String nameFile;
     private JSONParser parser;
@@ -33,6 +31,7 @@ public class UserDAOJSON implements UserDAO {
         return SingleToneHelper.INSTANCE;
     }
 
+    @Override
     public void setTypeDB(String pathToFileDB) {
         this.pathToFileDB = pathToFileDB;
         this.nameFile = "users.json";
@@ -55,11 +54,6 @@ public class UserDAOJSON implements UserDAO {
     }
 
     @Override
-    public void setDataSource(DataSource dataSource) {
-
-    }
-
-    @Override
     public void create(String fullName, String login, String password) {
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
@@ -75,7 +69,7 @@ public class UserDAOJSON implements UserDAO {
             jUsers.add(jo);
             jsonObject.put("users", jUsers);
 
-            saveFile(jsonObject);
+            saveFile(jsonObject, pathToFileDB + nameFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -107,7 +101,7 @@ public class UserDAOJSON implements UserDAO {
     }
 
     @Override
-    public User getById(String id) {
+    public User getUserById(String id) {
         ArrayList<User> users = new ArrayList<>();
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
@@ -172,7 +166,7 @@ public class UserDAOJSON implements UserDAO {
                 jUsers.add(jo);
             }
             jsonObject.put("users", jUsers);
-            saveFile(jsonObject);
+            saveFile(jsonObject, pathToFileDB + nameFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -182,32 +176,10 @@ public class UserDAOJSON implements UserDAO {
         }
     }
 
-    private long getMaxId(JSONArray jUsers) {
-        long maxId = 0;
-        for (Object o : jUsers) {
-            JSONObject jo = (JSONObject) o;
-            if (maxId < Long.parseLong(jo.get("id").toString())) {
-                maxId = Long.parseLong(jo.get("id").toString());
-            }
-        }
-        return maxId;
-    }
-
     private User getUserFromJSONObject(JSONObject jo) {
         User user = new User(jo.get("fullname").toString(), jo.get("login").toString(), jo.get("password").toString());
         user.setId(Long.parseLong(jo.get("id").toString()));
         user.setIdSession(Long.parseLong(jo.get("idsession").toString()));
         return user;
-    }
-
-    private void saveFile(JSONObject jsonObject) {
-        try {
-            FileWriter file = new FileWriter(pathToFileDB + nameFile);
-            file.write(jsonObject.toJSONString());
-            file.flush();
-            file.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

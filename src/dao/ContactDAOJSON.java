@@ -1,13 +1,11 @@
 package dao;
 
 import entity.Contact;
-import interfaces.ContactDAO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import javax.sql.DataSource;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +14,7 @@ import java.util.List;
  * Created by Vadim on 06.05.2016.
  *
  */
-public class ContactDAOJSON implements ContactDAO {
+public class ContactDAOJSON extends AbstractDAO {
     private String pathToFileDB;
     private String nameFile;
     private String nameTableContacts;
@@ -35,6 +33,7 @@ public class ContactDAOJSON implements ContactDAO {
         return SingleToneHelper.INSTANCE;
     }
 
+    @Override
     public void setTypeDB(String pathToFileDB) {
         this.pathToFileDB = pathToFileDB;
         this.nameFile = "contacts.json";
@@ -53,11 +52,6 @@ public class ContactDAOJSON implements ContactDAO {
                 e.printStackTrace();
             }
         }
-
-    }
-
-    @Override
-    public void setDataSource(DataSource dataSource) {
 
     }
 
@@ -81,7 +75,7 @@ public class ContactDAOJSON implements ContactDAO {
             jContactsArray.add(jo);
             jsonObject.put(nameTableContacts, jContactsArray);
 
-            saveFile(jsonObject);
+            saveFile(jsonObject, pathToFileDB + nameFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -92,7 +86,7 @@ public class ContactDAOJSON implements ContactDAO {
     }
 
     @Override
-    public Contact getById(String id) {
+    public Contact getContactById(String id) {
         ArrayList<Contact> contacts = new ArrayList<>();
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
@@ -188,7 +182,7 @@ public class ContactDAOJSON implements ContactDAO {
 
             }
             jObject.put(nameTableContacts, jContactsArray);
-            saveFile(jObject);
+            saveFile(jObject, pathToFileDB + nameFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -220,7 +214,7 @@ public class ContactDAOJSON implements ContactDAO {
             }
 
             jsonObject.put(nameTableContacts, jContactsArray);
-            saveFile(jsonObject);
+            saveFile(jsonObject, pathToFileDB + nameFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -274,27 +268,5 @@ public class ContactDAOJSON implements ContactDAO {
         contact.setAddress(jo.get("address").toString());
         contact.setEmail(jo.get("email").toString());
         return contact;
-    }
-
-    private long getMaxId(JSONArray jContactsArray) {
-        long maxId = 0;
-        for (Object o : jContactsArray) {
-            JSONObject jo = (JSONObject) o;
-            if (maxId < Long.parseLong(jo.get("id").toString())) {
-                maxId = Long.parseLong(jo.get("id").toString());
-            }
-        }
-        return maxId;
-    }
-
-    private void saveFile(JSONObject jsonObject) {
-        try {
-            FileWriter file = new FileWriter(pathToFileDB + nameFile);
-            file.write(jsonObject.toJSONString());
-            file.flush();
-            file.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

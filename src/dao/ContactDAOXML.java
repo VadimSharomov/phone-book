@@ -1,15 +1,10 @@
 package dao;
 
 import entity.Contact;
-import interfaces.ContactDAO;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
-import org.dom4j.io.XMLWriter;
 
-import javax.sql.DataSource;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +12,7 @@ import java.util.List;
  * Created by Vadim on 20.04.2016.
  *
  */
-public class ContactDAOXML implements ContactDAO {
+public class ContactDAOXML extends AbstractDAO {
     private String pathToFileDB;
     private File inputFile;
     private SAXReader reader;
@@ -36,6 +31,7 @@ public class ContactDAOXML implements ContactDAO {
         return SingleToneHelper.INSTANCE;
     }
 
+    @Override
     public void setTypeDB(String pathToFileDB) {
         this.pathToFileDB = pathToFileDB;
         File file = new File(pathToFileDB + "contacts.xml");
@@ -44,7 +40,7 @@ public class ContactDAOXML implements ContactDAO {
         if (!file.exists()) {
             Document newDocument = DocumentHelper.createDocument();
             Element root = newDocument.addElement("class");
-            saveDocument(newDocument);
+            saveDocument(newDocument, inputFile);
         }
         try {
             document = reader.read(inputFile);
@@ -53,14 +49,10 @@ public class ContactDAOXML implements ContactDAO {
         }
     }
 
-    @Override
-    public void setDataSource(DataSource dataSource) {
-
-    }
 
     @Override
     public void create(String userId, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
-        long maxId = getMaxId();
+        long maxId = getMaxId(document, pathToNode);
 
         Element classElement = document.getRootElement();
         Element contact = classElement.addElement("contact").addAttribute("id", String.valueOf(maxId + 1));
@@ -72,7 +64,7 @@ public class ContactDAOXML implements ContactDAO {
         contact.addElement("homephone").addText(homePhone);
         contact.addElement("address").addText(address);
         contact.addElement("email").addText(email);
-        saveDocument(document);
+        saveDocument(document, inputFile);
     }
 
     @Override
@@ -105,7 +97,7 @@ public class ContactDAOXML implements ContactDAO {
     }
 
     @Override
-    public Contact getById(String id) {
+    public Contact getContactById(String id) {
         Element classElement = document.getRootElement();
         List<Node> nodes = document.selectNodes(pathToNode);
         for (Node node : nodes) {
@@ -129,7 +121,7 @@ public class ContactDAOXML implements ContactDAO {
             node.selectSingleNode("address").setText(address);
             node.selectSingleNode("email").setText(email);
         }
-        saveDocument(document);
+        saveDocument(document, inputFile);
     }
 
     @Override
@@ -139,7 +131,7 @@ public class ContactDAOXML implements ContactDAO {
         for (Node node : nodes) {
             node.detach();
         }
-        saveDocument(document);
+        saveDocument(document, inputFile);
     }
 
     private Contact getContactFromNode(Node node) {
@@ -154,29 +146,5 @@ public class ContactDAOXML implements ContactDAO {
         contact.setAddress(node.selectSingleNode("address").getText());
         contact.setEmail(node.selectSingleNode("email").getText());
         return contact;
-    }
-
-    private long getMaxId() {
-        long maxId = 0;
-        Element classElement = document.getRootElement();
-        List<Node> nodes = document.selectNodes(pathToNode);
-        for (Node node : nodes) {
-            if (maxId < Long.parseLong(node.valueOf("@id"))) {
-                maxId = Long.parseLong(node.valueOf("@id"));
-            }
-        }
-        return maxId;
-    }
-
-    private void saveDocument(Document document) {
-        try {
-            FileWriter fileWriter = new FileWriter(inputFile);
-            XMLWriter output = new XMLWriter(fileWriter);
-            output.write(document);
-            output.close();
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

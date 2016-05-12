@@ -17,7 +17,7 @@ public interface UserDAO {
 
     ArrayList<User> getAllUsers();
 
-    User getById(String id);
+    User getUserById(String id);
 
     User getByLogin(String login);
 
