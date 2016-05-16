@@ -446,39 +446,4 @@ public class Tests {
         when(mock.getMySQLDriverManagerDatasource()).thenReturn(driverManagerDataSource);
         assertEquals(driverManagerDataSource, mock.getMySQLDriverManagerDatasource());
     }
-
-    @Test
-    public void testRESTControlGreeting() {
-        RestControl mock = mock(RestControl.class);
-        when(mock.greeting("name")).thenReturn("Hello, World!");
-        assertEquals("Hello, World!", mock.greeting("name"));
-    }
-
-    @Test
-    public void testRESTControlHomePage() {
-        RestControl mock = mock(RestControl.class);
-        when(mock.homePage("name")).thenReturn("Hello, World!");
-        assertEquals("Hello, World!", mock.homePage("name"));
-    }
-
-    @Test
-    public void testRESTControlLoginPage() {
-        RestControl mock = mock(RestControl.class);
-        when(mock.loginPage("idSession:1461419595480", "login", "password")).thenReturn("Welcome");
-        assertEquals("Welcome", mock.loginPage("idSession:1461419595480", "login", "password"));
-    }
-
-    @Test
-    public void testRESTControlLogout() {
-        RestControl mock = mock(RestControl.class);
-        when(mock.logout("iduser", "idsession")).thenReturn("Logout");
-        assertEquals("Logout", mock.logout("iduser", "idsession"));
-    }
-
-    @Test
-    public void testRESTControlAuthorization() {
-        RestControl mock = mock(RestControl.class);
-        when(mock.authorization("name", "login", "password", "idSession:1461419595480")).thenReturn("Authorization");
-        assertEquals("Authorization", mock.authorization("name", "login", "password", "idSession:1461419595480"));
-    }
 }

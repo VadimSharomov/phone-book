@@ -7,9 +7,10 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import services.ContactService;
 import services.UserService;
 
@@ -18,8 +19,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -28,20 +27,15 @@ import java.util.regex.Pattern;
 
 import static java.net.InetAddress.getLocalHost;
 
-@RestController
+@Controller
 public class RestControl {
     private String myIP;
-    private static String pathToHTMLFiles;
     private Properties properties = new Properties();
     private static final String PATTERN_LOGIN = "[a-z,A-Z]{3,}";
     private static final String PATTERN_MOBILE_PHONE_UKR = "[+][3][8][0][(][3569][0-9][)][0-9]{7}";
     private static final String PATTERN_STATIONARY_PHONE_UKR = "[+][3][8][0][(][3456][0-9][)][0-9]{7}";
     private static final String PATTERN_EMAIL = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
     private ArrayList<Long> initIdSessionList = new ArrayList<>();
-    private static String homePageFile = "HomePage.html";
-    private static String registrationPageFile = "RegistrationPage.html";
-    private static String viewContactsPageFile = "ViewContact.html";
-    private static String createContactPageFile = "CreateContact.html";
     private UserService userService = UserService.getInstance();
 
     {
@@ -71,12 +65,6 @@ public class RestControl {
 
                 InputStream input = new FileInputStream(pathToConfigFile);
                 properties.load(input);
-                pathToHTMLFiles = properties.getProperty("pathHTMLFiles");
-
-                if (!(new File(pathToHTMLFiles + homePageFile)).exists()) {
-                    System.out.println("\nIn file.properties is incorrect 'pathHTMLFiles'!\n");
-                    System.exit(1);
-                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -98,63 +86,65 @@ public class RestControl {
 
     @RequestMapping("/test")
     public String greeting(
-            @RequestParam(value = "name", required = false) String name) {
-        return "Hello, World!";
+            @RequestParam(value = "name", required = false, defaultValue = "World") String name, Model model) {
+        model.addAttribute("name", name);
+        return "Greeting";
     }
 
     @RequestMapping("/")
     public String homePage(
-            @RequestParam(value = "name", required = false) String name) {
-        return homePageHTML();
+            @RequestParam(value = "name", required = false) String name, Model model) {
+        model.addAttribute("myipaddress", myIP);
+        model.addAttribute("idSessionValue", String.valueOf(generateIdSession()));
+        return "Home";
     }
 
-    private String homePageHTML() {
-        try {
-            return new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, homePageFile))).replace("myipaddress", myIP).replace("idSessionValue", String.valueOf(generateIdSession()));
-        } catch (IOException e) {
-            e.printStackTrace();
+    @RequestMapping("/logout")
+    public String logout(
+            @RequestParam(value = "iduser", required = false) String idUser,
+            @RequestParam(value = "idsession", required = false) String idSession, Model model) {
+        if ((idUser != null) && (idSession) != null) {
+            closeSession(idUser, idSession);
         }
-        return "File not found: " + homePageFile + " to path 'pathHTMLFiles' in file.properties: " + pathToHTMLFiles;
+        model.addAttribute("myipaddress", myIP);
+        model.addAttribute("idSessionValue", String.valueOf(generateIdSession()));
+        return "Home";
     }
 
     @RequestMapping("/login")
     public String loginPage(
             @RequestParam(value = "idsession", required = false) String idSession,
             @RequestParam(value = "login", required = false) String login,
-            @RequestParam(value = "password", required = false) String password) {
+            @RequestParam(value = "password", required = false) String password, Model model) {
 
+        model.addAttribute("myipaddress", myIP);
+        model.addAttribute("idSessionValue", String.valueOf(generateIdSession()));
         if (!initIdSessionList.contains(Long.parseLong(idSession))) {
-            return showWarning(homePageHTML(), "Session is over, you need to login!");
+            model.addAttribute("warningMessage", "Session is over, you need to login!");
+            return "Home";
         }
 
         if ((login == null) || (login.length() < 3)) {
-            return showWarning(homePageHTML(), "Login is to short!");
+            model.addAttribute("warningMessage", "Login is to short!");
+            return "Home";
         }
         if ((password == null) || (password.length() < 5)) {
-            return showWarning(homePageHTML(), "Password is to short!");
+            model.addAttribute("warningMessage", "Password is to short!");
+            return "Home";
         }
 
         User user = userService.getByLogin(login);
         if (user == null) {
-            return registrationPageHTML(idSession).replace("idSessionValue", String.valueOf(idSession));
+            return "RegistrationPage";
         }
 
         if (!password.equals(user.getPassword())) {
-            return showWarning(homePageHTML(), "Password is incorrect!");
+            model.addAttribute("warningMessage", "Password is incorrect!");
+            return "Home";
         }
 
         userService.openSession(user.getId(), idSession);
-        return viewContacts(String.valueOf(user.getId()), idSession, null).replace("idSessionValue", String.valueOf(idSession));
-    }
-
-    @RequestMapping("/logout")
-    public String logout(
-            @RequestParam(value = "iduser", required = false) String idUser,
-            @RequestParam(value = "idsession", required = false) String idSession) {
-        if ((idUser != null) && (idSession) != null) {
-            closeSession(idUser, idSession);
-        }
-        return homePageHTML();
+        return viewContacts(String.valueOf(user.getId()), idSession, null, model);
     }
 
     @RequestMapping("/registration")
@@ -162,35 +152,52 @@ public class RestControl {
             @RequestParam(value = "name", required = false) String fullName,
             @RequestParam(value = "login", required = false) String login,
             @RequestParam(value = "password", required = false) String password,
-            @RequestParam(value = "idsession", required = false) String idSession) {
+            @RequestParam(value = "idsession", required = false) String idSession, Model model) {
 
         if (fullName == null && login == null && password == null) {
             if (idSession == null) {
-                return homePageHTML();
+                return "Home";
             } else {
-                return registrationPageHTML(idSession);
+                model.addAttribute("myipaddress", myIP);
+                model.addAttribute("idSessionValue", String.valueOf(generateIdSession()));
+                return "RegistrationPage";
             }
         }
 
         if ((fullName == null) || (fullName.length() < 5)) {
-            return showWarning(registrationPageHTML(idSession), "Full name is to short!");
+            model.addAttribute("myipaddress", myIP);
+            model.addAttribute("idSessionValue", String.valueOf(generateIdSession()));
+            model.addAttribute("warningMessage", "Full name is to short!");
+            return "RegistrationPage";
         }
         if ((login == null) || (login.length() < 3)) {
-            return showWarning(registrationPageHTML(idSession), "Login is to short!");
+            model.addAttribute("myipaddress", myIP);
+            model.addAttribute("idSessionValue", String.valueOf(generateIdSession()));
+            model.addAttribute("warningMessage", "Login is to short!");
+            return "RegistrationPage";
         }
 
         Pattern p = Pattern.compile(PATTERN_LOGIN);
         if (!p.matcher(login).matches()) {
-            return showWarning(registrationPageHTML(idSession), "Incorrect characters in login!");
+            model.addAttribute("myipaddress", myIP);
+            model.addAttribute("idSessionValue", String.valueOf(generateIdSession()));
+            model.addAttribute("warningMessage", "Incorrect characters in login!");
+            return "RegistrationPage";
         }
 
         if ((password == null) || (password.length() < 5)) {
-            return showWarning(registrationPageHTML(idSession), "Password is to short!");
+            model.addAttribute("myipaddress", myIP);
+            model.addAttribute("idSessionValue", String.valueOf(generateIdSession()));
+            model.addAttribute("warningMessage", "Password is to short!");
+            return "RegistrationPage";
         }
 
         User user = userService.getByLogin(login);
         if (user != null) {
-            return showWarning(registrationPageHTML(idSession), "This login already exists!");
+            model.addAttribute("myipaddress", myIP);
+            model.addAttribute("idSessionValue", String.valueOf(generateIdSession()));
+            model.addAttribute("warningMessage", "This login already exists!");
+            return "RegistrationPage";
         }
         userService.create(fullName, login, password);
         user = userService.getByLogin(login);
@@ -201,30 +208,27 @@ public class RestControl {
         }
         userService.openSession(user.getId(), String.valueOf(user.getIdSession()));
 
-        return viewContacts(String.valueOf(user.getId()), idSession, null).replace("idSessionValue", String.valueOf(user.getIdSession()));
-    }
-
-    private String registrationPageHTML(String idSession) {
-        try {
-            return new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, registrationPageFile))).replace("myipaddress", myIP).replace("idSessionValue", idSession);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "File not found: " + registrationPageFile + " in path: " + pathToHTMLFiles;
+        return viewContacts(String.valueOf(user.getId()), idSession, null, model);
     }
 
     @RequestMapping("/view")
     private String viewContacts(
             @RequestParam(value = "iduser", required = false) String idUser,
             @RequestParam(value = "idsession", required = false) String idSession,
-            @RequestParam(value = "contacts", required = false) List<Contact> contacts) {
+            @RequestParam(value = "contacts", required = false) List<Contact> contacts, Model model) {
 
         if (!idUser.matches("[0-9]+")) {
-            return showWarning(homePageHTML(), "Session is over, you need to login!");
+            model.addAttribute("myipaddress", myIP);
+            model.addAttribute("idSessionValue", String.valueOf(generateIdSession()));
+            model.addAttribute("warningMessage", "Session is over, you need to login!");
+            return "Home";
         }
         User user = userService.getById(idUser);
         if (isSessionOver(user, idSession)) {
-            return showWarning(homePageHTML(), "Session is over, you need to login!");
+            model.addAttribute("myipaddress", myIP);
+            model.addAttribute("idSessionValue", String.valueOf(generateIdSession()));
+            model.addAttribute("warningMessage", "Session is over, you need to login!");
+            return "Home";
         }
         if (contacts == null) {
             contacts = ContactService.getInstance().getByIdUser(idUser);
@@ -236,28 +240,13 @@ public class RestControl {
                 }
             });
         }
-        try {
-            String page = new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, viewContactsPageFile))).replace("myipaddress", myIP).replace("idUser", idUser).replace("userLogin", user.getLogin()).replace("idSessionValue", String.valueOf(user.getIdSession()));
+        model.addAttribute("myipaddress", myIP);
+        model.addAttribute("idSessionValue", idSession);
+        model.addAttribute("idUser", idUser);
+        model.addAttribute("userLogin", user.getLogin());
+        model.addAttribute("contacts", contacts);
 
-            StringBuilder sb = new StringBuilder();
-            for (Contact con : contacts) {
-                sb.append("<tr onmouseenter=\"onmouse(this)\" onmouseleave=\"outmouse(this)\">");
-                sb.append("<td class =\"vcenter\"> <input type=\"checkbox\" value=\"").append(con.getId()).append("\"></td>");
-                sb.append("<td>").append(con.getLastName()).append("</td>");
-                sb.append("<td>").append(con.getName()).append("</td>");
-                sb.append("<td>").append(con.getMiddleName()).append("</td>");
-                sb.append("<td>").append(con.getMobilePhone()).append("</td>");
-                sb.append("<td>").append(con.getHomePhone()).append("</td>");
-                sb.append("<td>").append(con.getAddress()).append("</td>");
-                sb.append("<td>").append(con.getEmail()).append("</td>");
-                sb.append("</tr>");
-            }
-
-            return page.replace("<!--Table_DoNotRemoveThis-->", sb.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "File not found: " + viewContactsPageFile + " in path: " + pathToHTMLFiles;
+        return "ViewContact";
     }
 
     @RequestMapping("/find")
@@ -266,39 +255,47 @@ public class RestControl {
             @RequestParam(value = "idsession", required = false) String idSession,
             @RequestParam(value = "lastname", required = false) String lastName,
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "mobilePhone", required = false) String mobilePhone) {
+            @RequestParam(value = "mobilePhone", required = false) String mobilePhone, Model model) {
 
+        model.addAttribute("myipaddress", myIP);
+        model.addAttribute("idSessionValue", idSession);
         if ((idUser == null) || (idSession == null)) {
-            return showWarning(homePageHTML(), "Session is over, you need to login!");
+            model.addAttribute("warningMessage", "Session is over, you need to login!");
+            return "Home";
         }
         User user = userService.getById(idUser);
         if (isSessionOver(user, idSession)) {
-            return showWarning(homePageHTML(), "Session is over, you need to login!");
+            model.addAttribute("warningMessage", "Session is over, you need to login!");
+            return "Home";
         }
         List<Contact> contacts = ContactService.getInstance().getByIdUserAndName(idUser, lastName, name, mobilePhone);
 
-        return viewContacts(idUser, idSession, contacts).
-                replace("name=\"lastname\"", "name=\"lastname\" value=\"" + lastName + "\"").
-                replace("name=\"name\"", "name=\"name\" value=\"" + name + "\"").
-                replace("name=\"mobilePhone\"", "name=\"mobilePhone\" value=\"" + mobilePhone + "\"").
-                replace("lastname=lastnameValue", "lastname=" + lastName).
-                replace("name=nameValue", "name=" + name).
-                replace("mobilePhone=mobilePhoneValue", "mobilePhone=" + mobilePhone);
+        model.addAttribute("idUser", idUser);
+        model.addAttribute("userLogin", user.getLogin());
+        model.addAttribute("contacts", contacts);
+
+        return "ViewContact";
     }
 
     @RequestMapping("/edit")
     private String editDeleteContact(@RequestParam(value = "iduser", required = false) String idUser,
                                      @RequestParam(value = "idsession", required = false) String idSession,
                                      @RequestParam(value = "sendcheckbox", required = false) String idContact,
-                                     @RequestParam(value = "delete", required = false) String isDelete) {
+                                     @RequestParam(value = "delete", required = false) String isDelete, Model model) {
 
         if ((idContact == null) || ("".equals(idContact)) || (idSession == null)) {
-            return showWarning(homePageHTML(), "Session is over, you need to login!");
+            model.addAttribute("myipaddress", myIP);
+            model.addAttribute("idSessionValue", idSession);
+            model.addAttribute("warningMessage", "Session is over, you need to login!");
+            return "Home";
         }
 
         User user = userService.getById(idUser);
         if (isSessionOver(user, idSession)) {
-            return showWarning(homePageHTML(), "Session is over, you need to login!");
+            model.addAttribute("myipaddress", myIP);
+            model.addAttribute("idSessionValue", idSession);
+            model.addAttribute("warningMessage", "Session is over, you need to login!");
+            return "Home";
         }
 
         String[] idContacts = idContact.split(",");
@@ -307,28 +304,26 @@ public class RestControl {
             for (String idCont : idContacts) {
                 ContactService.getInstance().delete(idCont);
             }
-            return viewContacts(idUser, idSession, null);
+            return viewContacts(idUser, idSession, null, model);
         } else {
-            Contact contact = ContactService.getInstance().getById(idContacts[0]);
-            try {
-                page.append(new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, createContactPageFile))).replace("myipaddress", myIP).replace("idUser", idUser).replace("userLogin", user.getLogin()).replace("idSessionValue", String.valueOf(user.getIdSession())));
+            Contact contact = ContactService.getInstance().getById(idContacts[0]); //only first checked is selecting
+            model.addAttribute("myipaddress", myIP);
+            model.addAttribute("idUser", idUser);
+            model.addAttribute("userLogin", user.getLogin());
+            model.addAttribute("idSessionValue", String.valueOf(user.getIdSession())); //idSession
+            model.addAttribute("titleUpdateContact", "Update contact");
 
-                page.replace(page.indexOf("name=\"lastName\""), page.indexOf("name=\"lastName\"") + "name=\"lastName\"".length(), "name=\"lastName\"".concat(" value=\"").concat(contact.getLastName()).concat("\""));
-                page.replace(page.indexOf("name=\"name\""), page.indexOf("name=\"name\"") + "name=\"name\"".length(), "name=\"name\"".concat(" value=\"").concat(contact.getName()).concat("\""));
-                page.replace(page.indexOf("name=\"middleName\""), page.indexOf("name=\"middleName\"") + "name=\"middleName\"".length(), "name=\"middleName\" value=\"".concat(contact.getMiddleName()).concat("\""));
-                page.replace(page.indexOf("name=\"mobilePhone\""), page.indexOf("name=\"mobilePhone\"") + "name=\"mobilePhone\"".length(), "name=\"mobilePhone\" value=\"" + contact.getMobilePhone().concat("\""));
-                page.replace(page.indexOf("name=\"homePhone\""), page.indexOf("name=\"homePhone\"") + "name=\"homePhone\"".length(), "name=\"homePhone\" value=\"" + contact.getHomePhone().concat("\""));
-                page.replace(page.indexOf("name=\"address\""), page.indexOf("name=\"address\"") + "name=\"address\"".length(), "name=\"address\" value=\"" + contact.getAddress().concat("\""));
-                page.replace(page.indexOf("name=\"email\""), page.indexOf("name=\"email\"") + "name=\"email\"".length(), "name=\"email\" value=\"" + contact.getEmail().concat("\""));
-                page.replace(page.indexOf("value=\"idContact\""), page.indexOf("value=\"idContact\"") + "value=\"idContact\"".length(), "value=\"" + contact.getId() + "\"");
-                page.replace(page.indexOf("Create"), page.indexOf("Create") + "Create".length(), "Update");
+            model.addAttribute("idContact", contact.getId());
+            model.addAttribute("lastName", contact.getLastName());
+            model.addAttribute("name", contact.getName());
+            model.addAttribute("middleName", contact.getMiddleName());
+            model.addAttribute("mobilePhone", contact.getMobilePhone());
+            model.addAttribute("homePhone", contact.getHomePhone());
+            model.addAttribute("address", contact.getAddress());
+            model.addAttribute("email", contact.getEmail());
 
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            return "CreateContact";
         }
-        return page.toString();
     }
 
     @RequestMapping("/create")
@@ -337,15 +332,16 @@ public class RestControl {
             @RequestParam(value = "idsession", required = false) String idSession,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "login", required = false) String login,
-            @RequestParam(value = "password", required = false) String password) {
+            @RequestParam(value = "password", required = false) String password, Model model) {
 
         User user = userService.getById(idUser);
-        try {
-            return new String(Files.readAllBytes(Paths.get(pathToHTMLFiles, createContactPageFile))).replace("myipaddress", myIP).replace("idUser", idUser).replace("userLogin", user.getLogin()).replace("idSessionValue", String.valueOf(user.getIdSession()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "File not found: " + createContactPageFile + " in path: " + pathToHTMLFiles;
+
+        model.addAttribute("myipaddress", myIP);
+        model.addAttribute("idUser", idUser);
+        model.addAttribute("idSessionValue", idSession);//String.valueOf(user.getIdSession())
+        model.addAttribute("titleUpdateContact", "Create contact");
+
+        return "CreateContact";
     }
 
     @RequestMapping("/updatecontact")
@@ -359,39 +355,51 @@ public class RestControl {
             @RequestParam(value = "mobilePhone", required = false) String mobilePhone,
             @RequestParam(value = "homePhone", required = false) String homePhone,
             @RequestParam(value = "address", required = false) String address,
-            @RequestParam(value = "email", required = false) String email) {
+            @RequestParam(value = "email", required = false) String email, Model model) {
+
+        model.addAttribute("myipaddress", myIP);
+        model.addAttribute("idUser", idUser);
+        model.addAttribute("idSessionValue", idSession);
+        model.addAttribute("titleUpdateContact", "Update contact");
 
         if ((idUser != null) && (idContact != null) && (lastName != null) && (middleName != null) && (mobilePhone != null)) {
-            if ("idContact".equals(idContact)) {
+            if ("".equals(idContact)) {
                 if (lastName.length() < 4) {
-                    return showWarning(createContact(idUser, idSession, null, null, null), "Last name is to short!");
+                    model.addAttribute("warningMessage", "Last name is to short!");
+                    return "CreateContact";
                 }
                 if (name.length() < 4) {
-                    return showWarning(createContact(idUser, idSession, null, null, null), "Name is to short!");
+                    model.addAttribute("warningMessage", "Name is to short!");
+                    return "CreateContact";
                 }
                 if (middleName.length() < 4) {
-                    return showWarning(createContact(idUser, idSession, null, null, null), "Middle name is to short!");
+                    model.addAttribute("warningMessage", "Middle name is to short!");
+                    return "CreateContact";
                 }
                 if (mobilePhone.length() < 15) {
-                    return showWarning(createContact(idUser, idSession, null, null, null), "Mobile phone is to short!");
+                    model.addAttribute("warningMessage", "Mobile phone is to short!");
+                    return "CreateContact";
                 }
 
                 Pattern p = Pattern.compile(PATTERN_MOBILE_PHONE_UKR);
                 if (!p.matcher(mobilePhone).matches()) {
-                    return showWarning(createContact(idUser, idSession, null, null, null), "Mobile phone is incorrect for Ukraine!");
+                    model.addAttribute("warningMessage", "Mobile phone is incorrect for Ukraine!");
+                    return "CreateContact";
                 }
 
                 if ((homePhone != null) && (!"".equals(homePhone))) {
                     p = Pattern.compile(PATTERN_STATIONARY_PHONE_UKR);
                     if (!p.matcher(homePhone).matches()) {
-                        return showWarning(createContact(idUser, idSession, null, null, null), "Home phone is incorrect for Ukraine!");
+                        model.addAttribute("warningMessage", "Home phone is incorrect for Ukraine!");
+                        return "CreateContact";
                     }
                 }
 
                 if ((email != null) && (!"".equals(email))) {
                     p = Pattern.compile(PATTERN_EMAIL, Pattern.CASE_INSENSITIVE);
                     if (!p.matcher(email).matches()) {
-                        return showWarning(createContact(idUser, idSession, null, null, null), "Email is incorrect!");
+                        model.addAttribute("warningMessage", "Email is incorrect!");
+                        return "CreateContact";
                     }
                 }
 
@@ -400,15 +408,16 @@ public class RestControl {
                 ContactService.getInstance().update(idUser, idContact, lastName, name, middleName, mobilePhone, homePhone, address, email);
             }
         } else if ((idUser == null) || (idSession == null)) {
-            return homePageHTML();
+            model.addAttribute("warningMessage", "Session is over, you need to login!");
+            return "Home";
         }
 
-        return viewContacts(idUser, idSession, null);
-    }
+        User user = userService.getById(idUser);
+        List<Contact> contacts = ContactService.getInstance().getByIdUser(idUser);
 
-    private String showWarning(String page, String message) {
-        return page.replace("<!--WarningMessage_DoNotRemoveThis-->", "<div class=\"alert alert-danger\">".concat(
-                "<a href=\"\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a> <strong>".concat(message).concat("</strong></div>")));
+        model.addAttribute("userLogin", user.getLogin());
+        model.addAttribute("contacts", contacts);
+        return "ViewContact";
     }
 
     private long generateIdSession() {
@@ -432,7 +441,6 @@ public class RestControl {
             if (canClear) initIdSessionList.clear();
         }
     }
-
 
     private boolean isSessionOver(User user, String idSession) {
         return (user.getIdSession() != Long.parseLong(idSession));
