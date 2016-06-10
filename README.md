@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/VadimSharomov/phone-book.svg?branch=master)](https://travis-ci.org/VadimSharomov/phone-book)
 Web проект “Телефонная книга”.
 Язык программирования: Java
 Инструменты:
