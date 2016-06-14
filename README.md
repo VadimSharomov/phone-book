@@ -2,6 +2,7 @@
 
 Technologies: RESTful Web Service, Spring Boot, Spring JDBC, MySql, XML, JSON, Junit, Mockito, RegExp, JS, JQuery, HTML, Bootstrap, Thymeleaf.
 
+
 Web проект “Телефонная книга”.
 Язык программирования: Java
 Инструменты:
