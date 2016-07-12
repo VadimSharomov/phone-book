@@ -1,4 +1,4 @@
-package main.java.controller;
+package main.java.rest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

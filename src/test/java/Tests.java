@@ -1,6 +1,6 @@
 package test.java;
 
-import main.java.controller.RestControl;
+import main.java.rest.StartController;
 import main.java.dao.*;
 import main.java.entity.Contact;
 import main.java.entity.User;
@@ -436,12 +436,12 @@ public class Tests {
     }
 
     /**
-     * Tests REST main.java.controller
+     * Tests REST main.java.rest
      */
 
     @Test
     public void testRESTControlGetMySQLDriverManagerDatasource() {
-        RestControl.MyBean mock = mock(RestControl.MyBean.class);
+        StartController.MyBean mock = mock(StartController.MyBean.class);
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         when(mock.getMySQLDriverManagerDatasource()).thenReturn(driverManagerDataSource);
         assertEquals(driverManagerDataSource, mock.getMySQLDriverManagerDatasource());

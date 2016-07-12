@@ -1,2 +1,2 @@
 Manifest-Version: 1.0
-Main-Class: main.java.controller.Application
+Main-Class: main.java.rest.Application
