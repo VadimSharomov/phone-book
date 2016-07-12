@@ -1,15 +1,20 @@
 package main.java.services;
 
+import main.java.rest.StartController;
+import org.slf4j.Logger;
+
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import static java.net.InetAddress.getLocalHost;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Created by Vadim
  * 12.07.2016.
  */
 public class Constants {
+    private final static Logger logger = getLogger(StartController.class);
     private static String typeDB;
     private static String hostDB;
     private static String userDB;
@@ -25,8 +30,10 @@ public class Constants {
     static {
         try {
             Constants.myIP = getLocalHost().getHostAddress();
+            logger.info("Got ip address: '" + Constants.myIP + "'");
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            logger.error("Not got ip address!", e.getMessage());
+            System.exit(1);
         }
     }
 

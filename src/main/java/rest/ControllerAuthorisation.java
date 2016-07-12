@@ -6,6 +6,7 @@ import main.java.services.Constants;
 import main.java.services.ContactService;
 import main.java.services.UserService;
 import main.java.services.UtilsRest;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,12 +16,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
  * Created by Vadim
  * 12.07.2016.
  */
 @Controller
 public class ControllerAuthorisation {
+    private final static Logger logger = getLogger(StartController.class);
     private UserService userService = UserService.getInstance();
 
     @RequestMapping("/login")
@@ -56,6 +60,7 @@ public class ControllerAuthorisation {
         }
 
         userService.openSession(user.getId(), idSession);
+        logger.info("Login user: '" + user + "'");
         return viewContacts(String.valueOf(user.getId()), idSession, null, model);
     }
 
@@ -119,7 +124,7 @@ public class ControllerAuthorisation {
             user.setIdSession(UtilsRest.generateIdSession());
         }
         userService.openSession(user.getId(), String.valueOf(user.getIdSession()));
-
+        logger.info("Registration user: '" + user + "'");
         return viewContacts(String.valueOf(user.getId()), idSession, null, model);
     }
 
@@ -205,6 +210,7 @@ public class ControllerAuthorisation {
             model.addAttribute("address", contact.getAddress());
             model.addAttribute("email", contact.getEmail());
 
+            logger.info("User: '" + user + "' edits contact '" + contact.getId() + "'");
             return "CreateContact";
         }
     }

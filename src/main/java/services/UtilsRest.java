@@ -1,15 +1,21 @@
 package main.java.services;
 
 import main.java.entity.User;
+import main.java.rest.StartController;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Created by Vadim
  * 12.07.2016.
  */
 public class UtilsRest {
+    private final static Logger logger = getLogger(StartController.class);
     public static boolean isSessionOver(User user, String idSession) {
+        logger.info("User: '" + user + "' - session is over");
         return (user.getIdSession() != Long.parseLong(idSession));
     }
 

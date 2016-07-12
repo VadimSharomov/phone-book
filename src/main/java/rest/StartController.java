@@ -6,6 +6,7 @@ import main.java.services.Constants;
 import main.java.services.ContactService;
 import main.java.services.UserService;
 import main.java.services.UtilsRest;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,12 +24,16 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
  * Created by Vadim
  * 18.04.2016.
  */
 @Controller
 public class StartController {
+    private final static Logger logger = getLogger(StartController.class);
+
     @Component
     public class MyBean {
         @SuppressWarnings("SpringJavaAutowiringInspection")
@@ -38,14 +42,10 @@ public class StartController {
             List<String> listArgs = args.getNonOptionArgs();
 
             if (listArgs.size() == 0) {
-                System.out.println("\nIn arguments JVM not found the path to file.properties!\n");
+                logger.error("In arguments JVM not found the path to file.properties!");
                 System.exit(1);
             }
             String pathToConfigFile = listArgs.get(0);
-            if (!(new File(pathToConfigFile)).exists()) {
-                System.out.println("\nIn arguments JVM is incorrect path to file.properties!\n");
-                System.exit(1);
-            }
 
             try {
                 InputStream input = new FileInputStream(pathToConfigFile);
@@ -59,7 +59,8 @@ public class StartController {
                 Constants.setUserPasswordDB(properties.getProperty("userPasswordDB"));
                 input.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("File properties not found in this path: '" + pathToConfigFile + "'", e.getMessage());
+                System.exit(1);
             }
         }
 
@@ -69,6 +70,7 @@ public class StartController {
             dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
             UserService.getInstance().setDataSource(dataSource, Constants.getTypeDB(), Constants.getPathToDBFiles());
             ContactService.getInstance().setDataSource(dataSource, Constants.getTypeDB(), Constants.getPathToDBFiles());
+            logger.info("All constants are initialized");
             return dataSource;
         }
     }
@@ -97,6 +99,7 @@ public class StartController {
         }
         model.addAttribute("myipaddress", Constants.getMyIP());
         model.addAttribute("idSessionValue", String.valueOf(UtilsRest.generateIdSession()));
+        logger.info("Logout user with id: '" + idUser + "'");
         return "Home";
     }
 
