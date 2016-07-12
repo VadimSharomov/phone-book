@@ -1,6 +1,6 @@
-package interfaces;
+package main.java.interfaces;
 
-import entity.User;
+import main.java.entity.User;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;

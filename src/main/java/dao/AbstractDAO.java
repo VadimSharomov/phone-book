@@ -1,9 +1,9 @@
-package dao;
+package main.java.dao;
 
-import entity.Contact;
-import entity.User;
-import interfaces.ContactDAO;
-import interfaces.UserDAO;
+import main.java.entity.Contact;
+import main.java.entity.User;
+import main.java.interfaces.ContactDAO;
+import main.java.interfaces.UserDAO;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;

@@ -1,14 +1,14 @@
-package test;
+package test.java;
 
-import controller.RestControl;
-import dao.*;
-import entity.Contact;
-import entity.User;
+import main.java.controller.RestControl;
+import main.java.dao.*;
+import main.java.entity.Contact;
+import main.java.entity.User;
+import main.java.services.ContactService;
+import main.java.services.UserService;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testng.annotations.Test;
-import services.ContactService;
-import services.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -436,7 +436,7 @@ public class Tests {
     }
 
     /**
-     * Tests REST controller
+     * Tests REST main.java.controller
      */
 
     @Test

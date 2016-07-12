@@ -1,7 +1,7 @@
-package controller;
+package main.java.controller;
 
-import entity.Contact;
-import entity.User;
+import main.java.entity.Contact;
+import main.java.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.Bean;
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import services.ContactService;
-import services.UserService;
+import main.java.services.ContactService;
+import main.java.services.UserService;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +27,10 @@ import java.util.regex.Pattern;
 
 import static java.net.InetAddress.getLocalHost;
 
+/**
+ * Created by Vadim on 18.04.2016.
+ *
+ */
 @Controller
 public class RestControl {
     private String myIP;

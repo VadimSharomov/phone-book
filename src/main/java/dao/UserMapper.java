@@ -1,6 +1,6 @@
-package dao;
+package main.java.dao;
 
-import entity.User;
+import main.java.entity.User;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

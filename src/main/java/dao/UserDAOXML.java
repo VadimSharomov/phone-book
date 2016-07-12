@@ -1,6 +1,6 @@
-package dao;
+package main.java.dao;
 
-import entity.User;
+import main.java.entity.User;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 

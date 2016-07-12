@@ -1,6 +1,6 @@
-package dao;
+package main.java.dao;
 
-import entity.Contact;
+import main.java.entity.Contact;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 

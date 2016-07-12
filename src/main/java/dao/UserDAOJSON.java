@@ -1,6 +1,6 @@
-package dao;
+package main.java.dao;
 
-import entity.User;
+import main.java.entity.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

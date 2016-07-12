@@ -1,6 +1,6 @@
-package interfaces;
+package main.java.interfaces;
 
-import entity.Contact;
+import main.java.entity.Contact;
 
 import javax.sql.DataSource;
 import java.util.List;

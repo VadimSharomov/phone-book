@@ -1,6 +1,6 @@
-package dao;
+package main.java.dao;
 
-import entity.Contact;
+import main.java.entity.Contact;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

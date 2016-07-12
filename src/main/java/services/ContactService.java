@@ -1,10 +1,10 @@
-package services;
+package main.java.services;
 
-import dao.ContactDAOJSON;
-import dao.ContactDAOXML;
-import dao.ContactDAOmySQL;
-import entity.Contact;
-import interfaces.ContactDAO;
+import main.java.dao.ContactDAOJSON;
+import main.java.dao.ContactDAOXML;
+import main.java.dao.ContactDAOmySQL;
+import main.java.entity.Contact;
+import main.java.interfaces.ContactDAO;
 
 import javax.sql.DataSource;
 import java.util.List;

@@ -1,10 +1,10 @@
-package services;
+package main.java.services;
 
-import dao.UserDAOJSON;
-import dao.UserDAOXML;
-import dao.UserDAOmySQL;
-import entity.User;
-import interfaces.UserDAO;
+import main.java.dao.UserDAOJSON;
+import main.java.dao.UserDAOXML;
+import main.java.dao.UserDAOmySQL;
+import main.java.entity.User;
+import main.java.interfaces.UserDAO;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;

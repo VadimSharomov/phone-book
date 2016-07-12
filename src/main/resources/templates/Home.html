@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Registration user</title>
-    <meta charset="UTF-8"/>
+    <title>Phone book</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
@@ -16,25 +16,23 @@
             } else {
                 sessionStorage.removeItem("whenloading");
 //                location.reload(true);
-//                window.location="http://myipaddress:8080/registration";
             }
         }
         /*]]>*/
     </script>
 </head>
+
 <body>
 <div class="container">
     <h2>Phone book</h2>
     <ul class="nav nav-tabs" role="tablist">
-        <li><a th:href="'http://' + ${myipaddress} + ':8080'">Login</a></li>
-        <li class="active"><a th:href="'http://' + ${myipaddress} + ':8080/registration?idsession=' + ${idSessionValue}">Registration</a></li>
+        <li class="active"><a th:href="'http://' + ${myipaddress} + ':8080'">Login</a></li>
+        <li>
+            <a th:href="'http://' + ${myipaddress} + ':8080/registration?idsession=' + ${idSessionValue}">Registration</a>
+        </li>
     </ul>
     <p></p>
-    <form th:action="'http://' + ${myipaddress} + ':8080/registration'" method="post">
-        <div class="form-group">
-            <label for="fullName">Full name:</label>
-            <input type="text" class="form-control" id="fullName" name="name" placeholder="Enter full name"/>
-        </div>
+    <form th:action="'http://' + ${myipaddress} + ':8080/login'" method="post">
         <div class="form-group">
             <label for="login">Login:</label>
             <input type="text" class="form-control" id="login" name="login" placeholder="Enter login"/>
@@ -43,16 +41,18 @@
             <label for="password">Password:</label>
             <input type="password" class="form-control" id="password" name="password" placeholder="Enter password"/>
         </div>
-        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-log-in"></span> Send</button>
+        <button type="submit" class="btn btn-default">
+            <span class="glyphicon glyphicon-log-in"></span> Entrance
+        </button>
         <input type="hidden" name="idsession" th:value="${idSessionValue}"/>
 
         <th:block th:if="${warningMessage != null}">
-            <div class="alert alert-danger"><a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a> <strong th:text="${warningMessage}">warningMessage</strong></div>
+            <div class="alert alert-danger"><a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong th:text="${warningMessage}">warningMessage</strong></div>
         </th:block>
 
     </form>
-
 </div>
-
 </body>
+
 </html>
