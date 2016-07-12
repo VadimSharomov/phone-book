@@ -2,6 +2,7 @@ package main.java.controller;
 
 import main.java.entity.Contact;
 import main.java.entity.User;
+import main.java.services.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +35,6 @@ import static java.net.InetAddress.getLocalHost;
 @Controller
 public class RestControl {
     private String myIP;
-    private Properties properties = new Properties();
     private static final String PATTERN_LOGIN = "[a-z,A-Z]{3,}";
     private static final String PATTERN_MOBILE_PHONE_UKR = "[+][3][8][0][(][3569][0-9][)][0-9]{7}";
     private static final String PATTERN_STATIONARY_PHONE_UKR = "[+][3][8][0][(][3456][0-9][)][0-9]{7}";
@@ -68,7 +68,15 @@ public class RestControl {
                 }
 
                 InputStream input = new FileInputStream(pathToConfigFile);
+                Properties properties = new Properties();
                 properties.load(input);
+
+                Constants.setHostDB(properties.getProperty("hostDB"));
+                Constants.setPathToDBFiles(properties.getProperty("pathToDBFiles"));
+                Constants.setTypeDB(properties.getProperty("typeDB"));
+                Constants.setUserDB(properties.getProperty("userDB"));
+                Constants.setUserPasswordDB(properties.getProperty("userPasswordDB"));
+                input.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -78,12 +86,12 @@ public class RestControl {
         public DriverManagerDataSource getMySQLDriverManagerDatasource() {
             DriverManagerDataSource dataSource = new DriverManagerDataSource();
             dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            dataSource.setUrl(properties.getProperty("hostDB"));
-            dataSource.setUsername(properties.getProperty("userDB"));
-            dataSource.setPassword(properties.getProperty("userPasswordDB"));
+            dataSource.setUrl(Constants.getHostDB());
+            dataSource.setUsername(Constants.getUserDB());
+            dataSource.setPassword(Constants.getUserPasswordDB());
 
-            userService.setDataSource(dataSource, properties.getProperty("typeDB"), properties.getProperty("pathToDBFiles"));
-            ContactService.getInstance().setDataSource(dataSource, properties.getProperty("typeDB"), properties.getProperty("pathToDBFiles"));
+            userService.setDataSource(dataSource, Constants.getTypeDB(), Constants.getPathToDBFiles());
+            ContactService.getInstance().setDataSource(dataSource, Constants.getTypeDB(), Constants.getPathToDBFiles());
             return dataSource;
         }
     }
