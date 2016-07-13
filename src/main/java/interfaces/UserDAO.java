@@ -1,9 +1,9 @@
-package main.java.interfaces;
+package interfaces;
 
-import main.java.entity.User;
+import entity.User;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Vadim on 14.04.2016.
@@ -15,7 +15,7 @@ public interface UserDAO {
 
     void create(String fullName, String login, String password);
 
-    ArrayList<User> getAllUsers();
+    List<User> getAllUsers();
 
     User getUserById(String id);
 

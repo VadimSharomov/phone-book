@@ -1,17 +1,16 @@
-package main.java.services;
+package services;
 
-import main.java.dao.ContactDAOJSON;
-import main.java.dao.ContactDAOXML;
-import main.java.dao.ContactDAOmySQL;
-import main.java.entity.Contact;
-import main.java.interfaces.ContactDAO;
+import dao.ContactDAOJSON;
+import dao.ContactDAOXML;
+import dao.ContactDAOmySQL;
+import entity.Contact;
+import interfaces.ContactDAO;
 
 import javax.sql.DataSource;
 import java.util.List;
 
 /**
- * Created by Vadim on 18.04.2016.
- *
+ * @author by Vadim Sharomov
  */
 public class ContactService {
     private ContactDAO dao;

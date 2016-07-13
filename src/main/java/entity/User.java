@@ -1,10 +1,8 @@
-package main.java.entity;
-
-import java.util.ArrayList;
+package entity;
 
 /**
- * Created by Vadim on 14.04.2016.
- *
+ * Created by Vadim
+ * 14.04.2016.
  */
 public class User {
     private long id;
@@ -12,7 +10,6 @@ public class User {
     private String fullName;
     private String login;
     private String password;
-    private ArrayList<Contact> contacts;
 
     public User(String fullName, String login, String password) {
         this.fullName = fullName;
@@ -66,6 +63,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User: " + fullName + " " + login + " idSession " + idSession;
+        return "User: " + fullName + " " + login;
     }
 }

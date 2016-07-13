@@ -1,6 +1,6 @@
-package main.java.dao;
+package dao;
 
-import main.java.entity.Contact;
+import entity.Contact;
 import org.slf4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -12,7 +12,7 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Created by Vadim on 18.04.2016.
+ * @author by Vadim Sharomov
  *
  */
 public class ContactDAOmySQL extends AbstractDAO {

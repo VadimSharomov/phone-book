@@ -1,17 +1,16 @@
-package main.java.services;
+package services;
 
-import main.java.dao.UserDAOJSON;
-import main.java.dao.UserDAOXML;
-import main.java.dao.UserDAOmySQL;
-import main.java.entity.User;
-import main.java.interfaces.UserDAO;
+import dao.UserDAOJSON;
+import dao.UserDAOXML;
+import dao.UserDAOmySQL;
+import entity.User;
+import interfaces.UserDAO;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by Vadim on 14.04.2016.
- *
+ * @author by Vadim Sharomov
  */
 public class UserService {
     private UserDAO dao;
@@ -43,7 +42,7 @@ public class UserService {
         }
     }
 
-    public ArrayList<User> getAllUsers() {
+    public List<User> getAllUsers() {
         return dao.getAllUsers();
     }
 

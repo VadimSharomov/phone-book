@@ -1,9 +1,9 @@
-package main.java.dao;
+package dao;
 
-import main.java.entity.Contact;
-import main.java.entity.User;
-import main.java.interfaces.ContactDAO;
-import main.java.interfaces.UserDAO;
+import entity.Contact;
+import entity.User;
+import interfaces.ContactDAO;
+import interfaces.UserDAO;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
@@ -16,7 +16,6 @@ import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -118,7 +117,7 @@ abstract class AbstractDAO implements UserDAO, ContactDAO {
     }
 
     @Override
-    public ArrayList<User> getAllUsers() {
+    public List<User> getAllUsers() {
         return null;
     }
 

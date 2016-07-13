@@ -1,17 +1,17 @@
-package main.java.services;
+package services;
 
-import main.java.rest.StartController;
+import rest.StartController;
 import org.slf4j.Logger;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static java.net.InetAddress.getLocalHost;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Created by Vadim
- * 12.07.2016.
+ * @author by Vadim Sharomov
  */
 public class Constants {
     private final static Logger logger = getLogger(StartController.class);
@@ -21,7 +21,7 @@ public class Constants {
     private static String userPasswordDB;
     private static String pathToDBFiles;
     private static String myIP;
-    private static ArrayList<Long> initIdSessionList = new ArrayList<>();
+    private static List<Long> initIdSessionList = new ArrayList<>();
     private static final String PATTERN_LOGIN = "[a-z,A-Z]{3,}";
     private static final String PATTERN_MOBILE_PHONE_UKR = "[+][3][8][0][(][3569][0-9][)][0-9]{7}";
     private static final String PATTERN_STATIONARY_PHONE_UKR = "[+][3][8][0][(][3456][0-9][)][0-9]{7}";
@@ -85,7 +85,7 @@ public class Constants {
         Constants.myIP = myIP;
     }
 
-    public static ArrayList<Long> getInitIdSessionList() {
+    public static List<Long> getInitIdSessionList() {
         return initIdSessionList;
     }
 

@@ -1,6 +1,6 @@
-package main.java.dao;
+package dao;
 
-import main.java.entity.Contact;
+import entity.Contact;
 import org.slf4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Created by Vadim
+ * @author by Vadim Sharomov
  *
  */
 class ContactMapper implements RowMapper<Contact> {

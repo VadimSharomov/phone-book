@@ -1,6 +1,6 @@
-package main.java.dao;
+package dao;
 
-import main.java.entity.User;
+import entity.User;
 import org.slf4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -37,7 +38,7 @@ public class UserDAOmySQL extends AbstractDAO {
     }
 
     @Override
-    public ArrayList<User> getAllUsers() {
+    public List<User> getAllUsers() {
         String SQL = "SELECT * FROM " + table;
         try {
             return new ArrayList<>(jdbcTemplateObject.query(SQL, new UserMapper()));

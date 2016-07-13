@@ -1,6 +1,6 @@
-package main.java.dao;
+package dao;
 
-import main.java.entity.User;
+import entity.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -9,12 +9,13 @@ import org.slf4j.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 
 /**
- * Created by Vadim on 30.04.2016.
+ * @author by Vadim Sharomov
  * Implementation JSON format
  */
 public class UserDAOJSON extends AbstractDAO {
@@ -84,8 +85,8 @@ public class UserDAOJSON extends AbstractDAO {
     }
 
     @Override
-    public ArrayList<User> getAllUsers() {
-        ArrayList<User> users = new ArrayList<>();
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
             JSONObject jsonObject = (JSONObject) obj;
@@ -106,7 +107,7 @@ public class UserDAOJSON extends AbstractDAO {
 
     @Override
     public User getUserById(String id) {
-        ArrayList<User> users = new ArrayList<>();
+        List<User> users = new ArrayList<>();
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
             JSONObject jsonObject = (JSONObject) obj;
@@ -151,7 +152,7 @@ public class UserDAOJSON extends AbstractDAO {
 
     @Override
     public void updateIdSession(long id, long idSession) {
-        ArrayList<User> users = new ArrayList<>();
+        List<User> users = new ArrayList<>();
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
             JSONObject jsonObject = (JSONObject) obj;

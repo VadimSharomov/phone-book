@@ -1,16 +1,15 @@
-package main.java.services;
+package services;
 
-import main.java.entity.User;
-import main.java.rest.StartController;
+import entity.User;
+import rest.StartController;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Created by Vadim
- * 12.07.2016.
+ * @author by Vadim Sharomov
  */
 public class UtilsRest {
     private final static Logger logger = getLogger(StartController.class);
@@ -25,7 +24,7 @@ public class UtilsRest {
             if (Constants.getInitIdSessionList().indexOf(Long.parseLong(idSession)) >= 0) {
                 Constants.getInitIdSessionList().remove(Constants.getInitIdSessionList().indexOf(Long.parseLong(idSession)));
             }
-            ArrayList<User> usersList = UserService.getInstance().getAllUsers();
+            List<User> usersList = UserService.getInstance().getAllUsers();
             boolean canClear = true;
             for (User usr : usersList) {
                 if (Constants.getInitIdSessionList().contains(usr.getIdSession())) {

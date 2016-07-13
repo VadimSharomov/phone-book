@@ -1,11 +1,11 @@
-package main.java.rest;
+package rest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Created by Vadim on 18.04.2016.
- *
+ * Created by Vadim
+ * on 18.04.2016.
  */
 @SpringBootApplication
 public class Application {

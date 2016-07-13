@@ -1,6 +1,6 @@
-package main.java.dao;
+package dao;
 
-import main.java.entity.Contact;
+import entity.Contact;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,7 +14,7 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Created by Vadim
+ * @author by Vadim Sharomov
  *
  */
 public class ContactDAOJSON extends AbstractDAO {
@@ -167,7 +167,7 @@ public class ContactDAOJSON extends AbstractDAO {
 
     @Override
     public void update(String id, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
-        List<Contact> contacts = new ArrayList<>();
+        List<Contact> contacts;
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
             JSONObject jObject = (JSONObject) obj;
@@ -202,7 +202,7 @@ public class ContactDAOJSON extends AbstractDAO {
 
     @Override
     public void delete(String id) {
-        List<Contact> contacts = new ArrayList<>();
+        List<Contact> contacts;
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
             JSONObject jsonObject = (JSONObject) obj;

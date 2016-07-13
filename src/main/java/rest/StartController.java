@@ -1,11 +1,11 @@
-package main.java.rest;
+package rest;
 
-import main.java.entity.Contact;
-import main.java.entity.User;
-import main.java.services.Constants;
-import main.java.services.ContactService;
-import main.java.services.UserService;
-import main.java.services.UtilsRest;
+import entity.Contact;
+import entity.User;
+import services.Constants;
+import services.ContactService;
+import services.UserService;
+import services.UtilsRest;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
