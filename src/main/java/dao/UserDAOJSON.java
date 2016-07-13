@@ -5,9 +5,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 
 /**
@@ -15,6 +18,7 @@ import java.util.ArrayList;
  * Implementation JSON format
  */
 public class UserDAOJSON extends AbstractDAO {
+    private final static Logger logger = getLogger(UserDAOJSON.class);
     private String pathToFileDB;
     private String nameFile;
     private JSONParser parser;
@@ -47,7 +51,7 @@ public class UserDAOJSON extends AbstractDAO {
                 file.flush();
                 file.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Can't access to file DB in setTypeDB: '" + pathToFileDB + nameFile + "'", e.getMessage());
             }
         }
 
@@ -71,11 +75,11 @@ public class UserDAOJSON extends AbstractDAO {
 
             saveFile(jsonObject, pathToFileDB + nameFile);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("Can't create user in file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Can't access to file DB in create user: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error("Can't parse file DB for create user: '" + pathToFileDB + nameFile + "'", e.getMessage());
         }
     }
 
@@ -91,11 +95,11 @@ public class UserDAOJSON extends AbstractDAO {
                 users.add(getUserFromJSONObject(jo));
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("Can't getAllUsers from file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Can't access to file DB in getAllUsers: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error("Can't parse file DB for getAllUsers: '" + pathToFileDB + nameFile + "'", e.getMessage());
         }
         return users;
     }
@@ -114,11 +118,11 @@ public class UserDAOJSON extends AbstractDAO {
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("Can't getUserById from file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Can't access to file DB in getUserById: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error("Can't parse file DB for getUserById: '" + pathToFileDB + nameFile + "'", e.getMessage());
         }
         return null;
     }
@@ -136,11 +140,11 @@ public class UserDAOJSON extends AbstractDAO {
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("Can't getByLogin from file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Can't access to file DB in getByLogin: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error("Can't parse file DB for getByLogin: '" + pathToFileDB + nameFile + "'", e.getMessage());
         }
         return null;
     }
@@ -168,11 +172,11 @@ public class UserDAOJSON extends AbstractDAO {
             jsonObject.put("users", jUsers);
             saveFile(jsonObject, pathToFileDB + nameFile);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("Can't updateIdSession from file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Can't access to file DB in updateIdSession: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error("Can't parse file DB for updateIdSession: '" + pathToFileDB + nameFile + "'", e.getMessage());
         }
     }
 

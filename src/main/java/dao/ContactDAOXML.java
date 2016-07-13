@@ -3,17 +3,20 @@ package main.java.dao;
 import main.java.entity.Contact;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Created by Vadim on 20.04.2016.
  *
  */
 public class ContactDAOXML extends AbstractDAO {
-    private String pathToFileDB;
+    private final static Logger logger = getLogger(ContactDAOXML.class);
     private File inputFile;
     private SAXReader reader;
     private Document document;
@@ -33,7 +36,6 @@ public class ContactDAOXML extends AbstractDAO {
 
     @Override
     public void setTypeDB(String pathToFileDB) {
-        this.pathToFileDB = pathToFileDB;
         File file = new File(pathToFileDB + "contacts.xml");
         this.inputFile = new File(pathToFileDB + "contacts.xml");
         this.pathToNode = "/class/contact";
@@ -45,7 +47,7 @@ public class ContactDAOXML extends AbstractDAO {
         try {
             document = reader.read(inputFile);
         } catch (DocumentException e) {
-            e.printStackTrace();
+            logger.error("Can't access to file DB in setTypeDB: '" + pathToFileDB + "contacts.xml" + "'", e.getMessage());
         }
     }
 

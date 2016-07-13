@@ -1,16 +1,20 @@
 package main.java.dao;
 
 import main.java.entity.Contact;
+import org.slf4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
- * Created by Vadim on 18.04.2016.
+ * Created by Vadim
  *
  */
 class ContactMapper implements RowMapper<Contact> {
+    private final static Logger logger = getLogger(ContactMapper.class);
 
     @Override
     public Contact mapRow(ResultSet rs, int rowNum) {
@@ -26,7 +30,7 @@ class ContactMapper implements RowMapper<Contact> {
             contact.setAddress(rs.getString("address"));
             contact.setEmail(rs.getString("email"));
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error create contact from ResultSet in mapRow: '" + rs + "'", e.getMessage());
         }
         return contact;
     }

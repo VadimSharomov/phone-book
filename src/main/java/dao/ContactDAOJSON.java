@@ -5,16 +5,20 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
- * Created by Vadim on 06.05.2016.
+ * Created by Vadim
  *
  */
 public class ContactDAOJSON extends AbstractDAO {
+    private final static Logger logger = getLogger(ContactDAOJSON.class);
     private String pathToFileDB;
     private String nameFile;
     private String nameTableContacts;
@@ -37,11 +41,11 @@ public class ContactDAOJSON extends AbstractDAO {
     public void setTypeDB(String pathToFileDB) {
         this.pathToFileDB = pathToFileDB;
         this.nameFile = "contacts.json";
-        File f = new File(pathToFileDB + nameFile);
-        if (!f.exists()) {
+        File fileDB = new File(pathToFileDB + nameFile);
+        if (!fileDB.exists()) {
             try {
                 JSONObject obj = new JSONObject();
-                FileWriter file = new FileWriter(f);
+                FileWriter file = new FileWriter(fileDB);
                 JSONArray list = new JSONArray();
                 obj.put(nameTableContacts, list);
 
@@ -49,7 +53,7 @@ public class ContactDAOJSON extends AbstractDAO {
                 file.flush();
                 file.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Can't access to file DB: '" + fileDB + "'", e.getMessage());
             }
         }
 
@@ -77,11 +81,11 @@ public class ContactDAOJSON extends AbstractDAO {
 
             saveFile(jsonObject, pathToFileDB + nameFile);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("Can't create contact in file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Can't access create contact in file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error("Can't parse file DB for create contact: '" + pathToFileDB + nameFile + "'", e.getMessage());
         }
     }
 
@@ -99,11 +103,11 @@ public class ContactDAOJSON extends AbstractDAO {
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("Can't getContactById from file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Can't getContactById, can't access to file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error("Can't parse file DB for getContactById: '" + pathToFileDB + nameFile + "'", e.getMessage());
         }
         return null;
     }
@@ -122,10 +126,12 @@ public class ContactDAOJSON extends AbstractDAO {
                     contacts.add(getContactFromJSONObject(jo));
                 }
             }
-        } catch (FileNotFoundException | ParseException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            logger.error("Can't getByIdUser from file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Can't getByIdUser, can't access to file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
+        } catch (ParseException e) {
+            logger.error("Can't parse file DB for getByIdUser: '" + pathToFileDB + nameFile + "'", e.getMessage());
         }
 
         return contacts;
@@ -148,10 +154,12 @@ public class ContactDAOJSON extends AbstractDAO {
                     contacts.add(getContactFromJSONObject(jo));
                 }
             }
-        } catch (FileNotFoundException | ParseException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            logger.error("Can't getByIdUserAndName from file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
+        } catch (ParseException e) {
+            logger.error("Can't parse file DB for getByIdUserAndName: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Can't getByIdUserAndName, can't access to file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         }
 
         return contacts;
@@ -184,11 +192,11 @@ public class ContactDAOJSON extends AbstractDAO {
             jObject.put(nameTableContacts, jContactsArray);
             saveFile(jObject, pathToFileDB + nameFile);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("Can't update contact in file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Can't update contact, can't access to file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error("Can't parse file DB for update contact: '" + pathToFileDB + nameFile + "'", e.getMessage());
         }
     }
 
@@ -216,11 +224,11 @@ public class ContactDAOJSON extends AbstractDAO {
             jsonObject.put(nameTableContacts, jContactsArray);
             saveFile(jsonObject, pathToFileDB + nameFile);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("Can't delete contact in file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Can't delete contact, can't access to file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error("Can't parse file DB for delete contact: '" + pathToFileDB + nameFile + "'", e.getMessage());
         }
     }
 
@@ -235,10 +243,12 @@ public class ContactDAOJSON extends AbstractDAO {
                 JSONObject jo = (JSONObject) o;
                 contacts.add(getContactFromJSONObject(jo));
             }
-        } catch (FileNotFoundException | ParseException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            logger.error("Can't getAllContacts in file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Can't getAllContacts, can't access to file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
+        } catch (ParseException e) {
+            logger.error("Can't parse file DB for getAllContacts: '" + pathToFileDB + nameFile + "'", e.getMessage());
         }
 
         return contacts;

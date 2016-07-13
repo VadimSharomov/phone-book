@@ -1,6 +1,7 @@
 package main.java.dao;
 
 import main.java.entity.Contact;
+import org.slf4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,11 +9,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
  * Created by Vadim on 18.04.2016.
  *
  */
 public class ContactDAOmySQL extends AbstractDAO {
+    private final static Logger logger = getLogger(ContactDAOmySQL.class);
     private String table;
     private JdbcTemplate jdbcTemplateObject;
 
@@ -40,6 +44,7 @@ public class ContactDAOmySQL extends AbstractDAO {
             return jdbcTemplateObject.queryForObject(SQL,
                     new Object[]{id}, new ContactMapper());
         } catch (IncorrectResultSizeDataAccessException e) {
+            logger.error("Incorrect result size data access exception in getContactById", e.getMessage());
             return null;
         }
     }
@@ -51,6 +56,7 @@ public class ContactDAOmySQL extends AbstractDAO {
             return jdbcTemplateObject.query(SQL,
                     new Object[]{idUser}, new ContactMapper());
         } catch (DataAccessException e) {
+            logger.error("Data access exception in getByIdUser", e.getMessage());
             return null;
         }
     }
@@ -62,6 +68,7 @@ public class ContactDAOmySQL extends AbstractDAO {
             return jdbcTemplateObject.query(SQL,
                     new Object[]{"%" + lastName + "%", "%" + name + "%", "%" + mobilePhone + "%", idUser}, new ContactMapper());
         } catch (DataAccessException e) {
+            logger.error("Data access exception in getByIdUserAndName", e.getMessage());
             return null;
         }
     }
@@ -72,7 +79,7 @@ public class ContactDAOmySQL extends AbstractDAO {
         try {
             jdbcTemplateObject.update(SQL, iduser, lastName, name, middleName, mobilePhone, homePhone, address, email);
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            logger.error("Data access exception in create contact", e.getMessage());
         }
     }
 
@@ -82,7 +89,7 @@ public class ContactDAOmySQL extends AbstractDAO {
         try {
             jdbcTemplateObject.update(SQL, lastName, name, middleName, mobilePhone, homePhone, address, email, id);
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            logger.error("Data access exception in update contact", e.getMessage());
         }
     }
 
@@ -92,7 +99,7 @@ public class ContactDAOmySQL extends AbstractDAO {
         try {
             jdbcTemplateObject.update(SQL, id);
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            logger.error("Data access exception in delete contact", e.getMessage());
         }
     }
 }

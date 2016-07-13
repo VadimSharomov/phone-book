@@ -10,6 +10,7 @@ import org.dom4j.Node;
 import org.dom4j.io.XMLWriter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -18,11 +19,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
- * Created by Vadim on 10.05.2016.
- * For the sames methods
+ * @author by Vadim Sharomov
  */
-abstract class AbstractDAO implements UserDAO, ContactDAO{
+abstract class AbstractDAO implements UserDAO, ContactDAO {
+    private final static Logger logger = getLogger(AbstractDAO.class);
 
     void saveFile(JSONObject jsonObject, String pathToFile) {
         try {
@@ -31,7 +34,7 @@ abstract class AbstractDAO implements UserDAO, ContactDAO{
             file.flush();
             file.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Can't write in file DB as JSON format in saveFile: '" + pathToFile + "'", e.getMessage());
         }
     }
 
@@ -43,7 +46,7 @@ abstract class AbstractDAO implements UserDAO, ContactDAO{
             output.close();
             fileWriter.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Can't write in file DB as XML format in saveDocument: '" + inputFile + "'", e.getMessage());
         }
     }
 
@@ -70,7 +73,8 @@ abstract class AbstractDAO implements UserDAO, ContactDAO{
         return maxId;
     }
 
-    void setTypeDB(String pathToFileDB){};
+    void setTypeDB(String pathToFileDB) {
+    }
 
     @Override
     public void create(String userId, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {

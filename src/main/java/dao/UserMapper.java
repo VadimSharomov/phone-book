@@ -1,16 +1,20 @@
 package main.java.dao;
 
 import main.java.entity.User;
+import org.slf4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
- * Created by Vadim on 18.04.2016.
+ * Created by Vadim
  *
  */
 class UserMapper implements RowMapper<User>{
+    private final static Logger logger = getLogger(UserMapper.class);
 
     @Override
     public User mapRow(ResultSet rs, int rowNum){
@@ -22,7 +26,7 @@ class UserMapper implements RowMapper<User>{
             user.setLogin(rs.getString("login"));
             user.setPassword(rs.getString("password"));
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error create user from ResultSet in mapRow: '" + rs + "'", e.getMessage());
         }
         return user;
     }
