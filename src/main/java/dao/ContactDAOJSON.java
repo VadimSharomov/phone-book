@@ -1,12 +1,15 @@
 package dao;
 
 import entity.Contact;
+import interfaces.ContactDAO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +17,10 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * @author by Vadim Sharomov
- *
+ * @author Vadim Sharomov
  */
-public class ContactDAOJSON extends AbstractDAO {
+@Service("contactjson")
+public class ContactDAOJSON extends AbstractDAO implements ContactDAO {
     private final static Logger logger = getLogger(ContactDAOJSON.class);
     private String pathToFileDB;
     private String nameFile;
@@ -27,14 +30,6 @@ public class ContactDAOJSON extends AbstractDAO {
     private ContactDAOJSON() {
         this.parser = new JSONParser();
         this.nameTableContacts = "contacts";
-    }
-
-    private static class SingleToneHelper {
-        private static final ContactDAOJSON INSTANCE = new ContactDAOJSON();
-    }
-
-    public static ContactDAOJSON getInstance() {
-        return SingleToneHelper.INSTANCE;
     }
 
     @Override
@@ -56,6 +51,11 @@ public class ContactDAOJSON extends AbstractDAO {
                 logger.error("Can't access to file DB: '" + fileDB + "'", e.getMessage());
             }
         }
+
+    }
+
+    @Override
+    public void setDataSource(DataSource dataSource) {
 
     }
 

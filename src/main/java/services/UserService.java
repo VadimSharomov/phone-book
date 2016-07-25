@@ -1,43 +1,40 @@
 package services;
 
-import dao.UserDAOJSON;
-import dao.UserDAOXML;
-import dao.UserDAOmySQL;
 import entity.User;
 import interfaces.UserDAO;
+import org.slf4j.Logger;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Map;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * @author by Vadim Sharomov
+ * @author Vadim Sharomov
  */
+@Service
 public class UserService {
+    private final static Logger logger = getLogger(UserService.class);
+
     private UserDAO dao;
 
-    private UserService() {
-    }
-
-    private static class SingleToneHelper {
-        private static final UserService INSTANCE = new UserService();
-    }
-
-    public static UserService getInstance() {
-        return SingleToneHelper.INSTANCE;
-    }
+    @Resource
+    private Map<String, UserDAO> daoServices;
 
     public void setDataSource(DataSource dataSource, String typeDB, String pathToFileDB) {
+        this.dao = daoServices.get("user" + typeDB.toLowerCase());
+        logger.info("*** Inject UserDAO in UserService: " + dao);
         if ("mysql".equals(typeDB.toLowerCase())) {
-            this.dao = UserDAOmySQL.getInstance();
             this.dao.setDataSource(dataSource);
         } else if ("xml".equals(typeDB.toLowerCase())) {
-            UserDAOXML.getInstance().setTypeDB(pathToFileDB);
-            this.dao = UserDAOXML.getInstance();
+            this.dao.setTypeDB(pathToFileDB);
         } else if ("json".equals(typeDB.toLowerCase())) {
-            UserDAOJSON.getInstance().setTypeDB(pathToFileDB);
-            this.dao = UserDAOJSON.getInstance();
+            this.dao.setTypeDB(pathToFileDB);
         } else {
-            System.out.println("\nClass " + this.getClass().getName() + ": Type data base is not known: " + typeDB + ". Refer parameter 'typeDB' in config file.\n");
+            logger.error("*** Class " + this.getClass().getName() + ": Type data base is not known: " + typeDB + ". Refer parameter 'typeDB' in config file.");
             System.exit(1);
         }
     }
@@ -50,7 +47,7 @@ public class UserService {
         return dao.getByLogin(login);
     }
 
-    public User getById(String idUser) {
+    public User getUserById(String idUser) {
         return dao.getUserById(idUser);
     }
 

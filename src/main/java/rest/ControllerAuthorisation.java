@@ -2,15 +2,16 @@ package rest;
 
 import entity.Contact;
 import entity.User;
-import services.Constants;
-import services.ContactService;
-import services.UserService;
-import services.UtilsRest;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import services.Constants;
+import services.ContactService;
+import services.UserService;
+import services.UtilsRest;
 
 import java.util.Comparator;
 import java.util.List;
@@ -19,13 +20,17 @@ import java.util.regex.Pattern;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Created by Vadim
- * 12.07.2016.
+ * @author Vadim Sharomov
  */
 @Controller
 public class ControllerAuthorisation {
     private final static Logger logger = getLogger(StartController.class);
-    private UserService userService = UserService.getInstance();
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ContactService contactService;
 
     @RequestMapping("/login")
     public String loginPage(
@@ -140,7 +145,7 @@ public class ControllerAuthorisation {
             model.addAttribute("warningMessage", "Session is over, you need to login!");
             return "Home";
         }
-        User user = userService.getById(idUser);
+        User user = userService.getUserById(idUser);
         if (UtilsRest.isSessionOver(user, idSession)) {
             model.addAttribute("myipaddress", Constants.getMyIP());
             model.addAttribute("idSessionValue", String.valueOf(UtilsRest.generateIdSession()));
@@ -148,7 +153,7 @@ public class ControllerAuthorisation {
             return "Home";
         }
         if (contacts == null) {
-            contacts = ContactService.getInstance().getByIdUser(idUser);
+            contacts = contactService.getByIdUser(idUser);
             contacts.sort(new Comparator<Contact>() {
                 @Override
                 public int compare(Contact o1, Contact o2) {
@@ -179,7 +184,7 @@ public class ControllerAuthorisation {
             return "Home";
         }
 
-        User user = userService.getById(idUser);
+        User user = userService.getUserById(idUser);
         if (UtilsRest.isSessionOver(user, idSession)) {
             model.addAttribute("myipaddress", Constants.getMyIP());
             model.addAttribute("idSessionValue", idSession);
@@ -190,11 +195,11 @@ public class ControllerAuthorisation {
         String[] idContacts = idContact.split(",");
         if ("Delete".equals(isDelete)) {
             for (String idCont : idContacts) {
-                ContactService.getInstance().delete(idCont);
+                contactService.delete(idCont);
             }
             return viewContacts(idUser, idSession, null, model);
         } else {
-            Contact contact = ContactService.getInstance().getById(idContacts[0]); //only first checked is selecting
+            Contact contact = contactService.getById(idContacts[0]); //only first checked is selecting
             model.addAttribute("myipaddress", Constants.getMyIP());
             model.addAttribute("idUser", idUser);
             model.addAttribute("userLogin", user.getLogin());

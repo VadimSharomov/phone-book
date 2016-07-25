@@ -1,8 +1,7 @@
 package entity;
 
 /**
- * Created by Vadim on 14.04.2016.
- *
+ * @author Vadim Sharomov
  */
 public class Contact {
     private long id;

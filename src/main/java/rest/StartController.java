@@ -2,10 +2,6 @@ package rest;
 
 import entity.Contact;
 import entity.User;
-import services.Constants;
-import services.ContactService;
-import services.UserService;
-import services.UtilsRest;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -16,6 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import services.Constants;
+import services.ContactService;
+import services.UserService;
+import services.UtilsRest;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,16 +27,20 @@ import java.util.regex.Pattern;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Created by Vadim
- * 18.04.2016.
+ * @author Vadim Sharomov
  */
 @Controller
 public class StartController {
     private final static Logger logger = getLogger(StartController.class);
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ContactService contactService;
+
     @Component
     public class MyBean {
-        @SuppressWarnings("SpringJavaAutowiringInspection")
         @Autowired
         public MyBean(ApplicationArguments args) {
             List<String> listArgs = args.getNonOptionArgs();
@@ -58,6 +62,7 @@ public class StartController {
                 Constants.setUserDB(properties.getProperty("userDB"));
                 Constants.setUserPasswordDB(properties.getProperty("userPasswordDB"));
                 input.close();
+                logger.info("*** Config file has read '" + pathToConfigFile + "'");
             } catch (IOException e) {
                 logger.error("File properties not found in this path: '" + pathToConfigFile + "'", e.getMessage());
                 System.exit(1);
@@ -68,9 +73,11 @@ public class StartController {
         public DriverManagerDataSource getMySQLDriverManagerDatasource() {
             DriverManagerDataSource dataSource = new DriverManagerDataSource(Constants.getHostDB(), Constants.getUserDB(), Constants.getUserPasswordDB());
             dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            UserService.getInstance().setDataSource(dataSource, Constants.getTypeDB(), Constants.getPathToDBFiles());
-            ContactService.getInstance().setDataSource(dataSource, Constants.getTypeDB(), Constants.getPathToDBFiles());
-            logger.info("All constants are initialized");
+            userService.setDataSource(dataSource, Constants.getTypeDB(), Constants.getPathToDBFiles());
+            contactService.setDataSource(dataSource, Constants.getTypeDB(), Constants.getPathToDBFiles());
+            logger.info("*** All constants have initialised");
+            logger.info("*** Inject contactService in StartController: " + contactService);
+            logger.info("*** Inject userService in StartController: " + userService);
             return dataSource;
         }
     }
@@ -95,7 +102,7 @@ public class StartController {
             @RequestParam(value = "iduser", required = false) String idUser,
             @RequestParam(value = "idsession", required = false) String idSession, Model model) {
         if ((idUser != null) && (idSession) != null) {
-            UtilsRest.closeSession(idUser, idSession);
+            UtilsRest.closeSession(userService, idUser, idSession);
         }
         model.addAttribute("myipaddress", Constants.getMyIP());
         model.addAttribute("idSessionValue", String.valueOf(UtilsRest.generateIdSession()));
@@ -118,12 +125,12 @@ public class StartController {
             model.addAttribute("warningMessage", "Session is over, you need to login!");
             return "Home";
         }
-        User user = UserService.getInstance().getById(idUser);
+        User user = userService.getUserById(idUser);
         if (UtilsRest.isSessionOver(user, idSession)) {
             model.addAttribute("warningMessage", "Session is over, you need to login!");
             return "Home";
         }
-        List<Contact> contacts = ContactService.getInstance().getByIdUserAndName(idUser, lastName, name, mobilePhone);
+        List<Contact> contacts = contactService.getByIdUserAndName(idUser, lastName, name, mobilePhone);
         model.addAttribute("idUser", idUser);
         model.addAttribute("userLogin", user.getLogin());
         model.addAttribute("contacts", contacts);
@@ -138,7 +145,7 @@ public class StartController {
             @RequestParam(value = "login", required = false) String login,
             @RequestParam(value = "password", required = false) String password, Model model) {
 
-        User user = UserService.getInstance().getById(idUser);
+        User user = userService.getUserById(idUser);
         model.addAttribute("myipaddress", Constants.getMyIP());
         model.addAttribute("idUser", idUser);
         model.addAttribute("idSessionValue", idSession);//String.valueOf(user.getIdSession())
@@ -201,16 +208,16 @@ public class StartController {
                         return "CreateContact";
                     }
                 }
-                ContactService.getInstance().create(idUser, lastName, name, middleName, mobilePhone, homePhone, address, email);
+                contactService.create(idUser, lastName, name, middleName, mobilePhone, homePhone, address, email);
             } else {
-                ContactService.getInstance().update(idUser, idContact, lastName, name, middleName, mobilePhone, homePhone, address, email);
+                contactService.update(idUser, idContact, lastName, name, middleName, mobilePhone, homePhone, address, email);
             }
         } else if ((idUser == null) || (idSession == null)) {
             model.addAttribute("warningMessage", "Session is over, you need to login!");
             return "Home";
         }
-        User user = UserService.getInstance().getById(idUser);
-        List<Contact> contacts = ContactService.getInstance().getByIdUser(idUser);
+        User user = userService.getUserById(idUser);
+        List<Contact> contacts = contactService.getByIdUser(idUser);
         model.addAttribute("userLogin", user.getLogin());
         model.addAttribute("contacts", contacts);
         return "ViewContact";

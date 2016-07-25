@@ -30,10 +30,10 @@ public class TestUserService {
     public void testUserServiceGetById() {
         UserService mock = mock(UserService.class);
         User user = new User();
-        when(mock.getById("1")).thenReturn(user);
-        when(mock.getById("aaa")).thenReturn(null);
-        assertEquals(user, mock.getById("1"));
-        assertEquals(null, mock.getById("aaa"));
+        when(mock.getUserById("1")).thenReturn(user);
+        when(mock.getUserById("aaa")).thenReturn(null);
+        assertEquals(user, mock.getUserById("1"));
+        assertEquals(null, mock.getUserById("aaa"));
     }
 
     @Test

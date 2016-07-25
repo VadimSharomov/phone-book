@@ -1,43 +1,40 @@
 package services;
 
-import dao.ContactDAOJSON;
-import dao.ContactDAOXML;
-import dao.ContactDAOmySQL;
 import entity.Contact;
 import interfaces.ContactDAO;
+import org.slf4j.Logger;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Map;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * @author by Vadim Sharomov
+ * @author Vadim Sharomov
  */
+@Service
 public class ContactService {
+    private final static Logger logger = getLogger(ContactService.class);
+
     private ContactDAO dao;
 
-    private ContactService() {
-    }
-
-    private static class SingleToneHelper {
-        private static final ContactService INSTANCE = new ContactService();
-    }
-
-    public static ContactService getInstance() {
-        return SingleToneHelper.INSTANCE;
-    }
+    @Resource
+    private Map<String, ContactDAO> daoServices;
 
     public void setDataSource(DataSource dataSource, String typeDB, String pathToFileDB) {
+        this.dao = daoServices.get("contact" + typeDB.toLowerCase());
+        logger.info("*** Inject ContactDAO in ContactService: " + dao);
         if ("mysql".equals(typeDB.toLowerCase())) {
-            this.dao = ContactDAOmySQL.getInstance();
             this.dao.setDataSource(dataSource);
         } else if ("xml".equals(typeDB.toLowerCase())) {
-            ContactDAOXML.getInstance().setTypeDB(pathToFileDB);
-            this.dao = ContactDAOXML.getInstance();
+            this.dao.setTypeDB(pathToFileDB);
         } else if ("json".equals(typeDB.toLowerCase())) {
-            ContactDAOJSON.getInstance().setTypeDB(pathToFileDB);
-            this.dao = ContactDAOJSON.getInstance();
+            this.dao.setTypeDB(pathToFileDB);
         } else {
-            System.out.println("\nClass " + this.getClass().getName() + ": Type data base is not known: " + typeDB + "! Refer parameter 'typeDB' in config file\n");
+            logger.error("***** Class " + this.getClass().getName() + ": Type data base is not known: " + typeDB + ". Refer parameter 'typeDB' in config file.");
             System.exit(1);
         }
     }

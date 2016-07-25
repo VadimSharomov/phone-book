@@ -2,12 +2,13 @@ package rest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
- * Created by Vadim
- * on 18.04.2016.
+ * @author Vadim Sharomov
  */
 @SpringBootApplication
+@ComponentScan({"rest","services","dao","interfaces"})
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

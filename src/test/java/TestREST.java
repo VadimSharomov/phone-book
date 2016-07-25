@@ -1,10 +1,10 @@
-import rest.StartController;
+import org.junit.Test;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.testng.annotations.Test;
+import rest.StartController;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by Vadim on 22.04.2016.

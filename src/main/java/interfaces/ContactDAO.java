@@ -6,10 +6,11 @@ import javax.sql.DataSource;
 import java.util.List;
 
 /**
- * Created by Vadim on 20.04.2016.
- *
+ * @author Vadim Sharomov
  */
 public interface ContactDAO {
+
+    void setTypeDB(String pathToFileDB);
 
     void setDataSource(DataSource dataSource);
 

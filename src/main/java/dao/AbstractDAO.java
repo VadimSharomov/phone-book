@@ -1,9 +1,5 @@
 package dao;
 
-import entity.Contact;
-import entity.User;
-import interfaces.ContactDAO;
-import interfaces.UserDAO;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
@@ -12,7 +8,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 
-import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,9 +16,9 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * @author by Vadim Sharomov
+ * @author Vadim Sharomov
  */
-abstract class AbstractDAO implements UserDAO, ContactDAO {
+abstract class AbstractDAO {
     private final static Logger logger = getLogger(AbstractDAO.class);
 
     void saveFile(JSONObject jsonObject, String pathToFile) {
@@ -70,69 +65,5 @@ abstract class AbstractDAO implements UserDAO, ContactDAO {
             }
         }
         return maxId;
-    }
-
-    void setTypeDB(String pathToFileDB) {
-    }
-
-    @Override
-    public void create(String userId, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
-
-    }
-
-    @Override
-    public Contact getContactById(String id) {
-        return null;
-    }
-
-    @Override
-    public List<Contact> getByIdUser(String idUser) {
-        return null;
-    }
-
-    @Override
-    public List<Contact> getByIdUserAndName(String idUser, String lastName, String name, String mobilePhone) {
-        return null;
-    }
-
-    @Override
-    public void update(String id, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
-
-    }
-
-    @Override
-    public void delete(String id) {
-
-    }
-
-
-    @Override
-    public void setDataSource(DataSource dataSource) {
-
-    }
-
-    @Override
-    public void create(String fullName, String login, String password) {
-
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        return null;
-    }
-
-    @Override
-    public User getUserById(String id) {
-        return null;
-    }
-
-    @Override
-    public User getByLogin(String login) {
-        return null;
-    }
-
-    @Override
-    public void updateIdSession(long id, long idSession) {
-
     }
 }

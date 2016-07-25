@@ -10,8 +10,7 @@ import java.sql.SQLException;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * @author by Vadim Sharomov
- *
+ * @author Vadim Sharomov
  */
 class ContactMapper implements RowMapper<Contact> {
     private final static Logger logger = getLogger(ContactMapper.class);

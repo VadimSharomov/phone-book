@@ -1,10 +1,12 @@
 package dao;
 
 import entity.User;
+import interfaces.UserDAO;
 import org.slf4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -13,9 +15,10 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * @author by Vadim Sharomov
+ * @author Vadim Sharomov
  */
-public class UserDAOmySQL extends AbstractDAO {
+@Service("usermysql")
+public class UserDAOmySQL extends AbstractDAO implements UserDAO{
     private final static Logger logger = getLogger(UserDAOmySQL.class);
     private String table;
     private JdbcTemplate jdbcTemplateObject;
@@ -24,12 +27,9 @@ public class UserDAOmySQL extends AbstractDAO {
         this.table = "users";
     }
 
-    private static class SingleToneHelper {
-        private static final UserDAOmySQL INSTANCE = new UserDAOmySQL();
-    }
+    @Override
+    public void setTypeDB(String pathToFileDB) {
 
-    public static UserDAOmySQL getInstance() {
-        return SingleToneHelper.INSTANCE;
     }
 
     @Override

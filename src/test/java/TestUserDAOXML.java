@@ -1,5 +1,6 @@
 import dao.UserDAOXML;
 import entity.User;
+import interfaces.UserDAO;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -17,12 +18,12 @@ public class TestUserDAOXML {
     @SuppressWarnings("Duplicates")
     @Test
     public void testUserDAOXMLgetById() {
-        UserDAOXML mock = mock(UserDAOXML.class);
+        UserDAO userDAOXML = mock(UserDAOXML.class);
         User user = new User();
-        when(mock.getUserById("1")).thenReturn(user);
-        when(mock.getUserById("a")).thenReturn(null);
-        assertEquals(user, mock.getUserById("1"));
-        assertEquals(null, mock.getUserById("a"));
+        when(userDAOXML.getUserById("1")).thenReturn(user);
+        when(userDAOXML.getUserById("a")).thenReturn(null);
+        assertEquals(user, userDAOXML.getUserById("1"));
+        assertEquals(null, userDAOXML.getUserById("a"));
     }
 
     @Test
