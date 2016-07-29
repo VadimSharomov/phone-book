@@ -1,6 +1,5 @@
 package services;
 
-import rest.StartController;
 import org.slf4j.Logger;
 
 import java.net.UnknownHostException;
@@ -14,11 +13,8 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author by Vadim Sharomov
  */
 public class Constants {
-    private final static Logger logger = getLogger(StartController.class);
+    private final static Logger logger = getLogger(Constants.class);
     private static String typeDB;
-    private static String hostDB;
-    private static String userDB;
-    private static String userPasswordDB;
     private static String pathToDBFiles;
     private static String myIP;
     private static List<Long> initIdSessionList = new ArrayList<>();
@@ -37,14 +33,6 @@ public class Constants {
         }
     }
 
-    public static String getHostDB() {
-        return hostDB;
-    }
-
-    public static void setHostDB(String hostDB) {
-        Constants.hostDB = hostDB;
-    }
-
     public static String getPathToDBFiles() {
         return pathToDBFiles;
     }
@@ -61,36 +49,16 @@ public class Constants {
         Constants.typeDB = typeDB;
     }
 
-    public static String getUserDB() {
-        return userDB;
-    }
-
-    public static void setUserDB(String userDB) {
-        Constants.userDB = userDB;
-    }
-
-    public static String getUserPasswordDB() {
-        return userPasswordDB;
-    }
-
-    public static void setUserPasswordDB(String userPasswordDB) {
-        Constants.userPasswordDB = userPasswordDB;
-    }
-
     public static String getMyIP() {
         return myIP;
-    }
-
-    public static void setMyIP(String myIP) {
-        Constants.myIP = myIP;
     }
 
     public static List<Long> getInitIdSessionList() {
         return initIdSessionList;
     }
 
-    public static void setInitIdSessionList(ArrayList<Long> initIdSessionList) {
-        Constants.initIdSessionList = initIdSessionList;
+    public static void addInitIdSession(Long idSession) {
+        Constants.initIdSessionList.add(idSession);
     }
 
     public static String getPatternEmail() {

@@ -1,6 +1,6 @@
 import dao.UserDAOXML;
 import entity.User;
-import interfaces.UserDAO;
+import dao.UserDAO;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;

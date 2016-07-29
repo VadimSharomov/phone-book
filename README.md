@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/VadimSharomov/phone-book.svg?branch=master)](https://travis-ci.org/VadimSharomov/phone-book)
 
-Technologies: RESTful Web Service, Spring Boot, Spring JDBC, MySql, XML, JSON, Junit, Mockito, RegExp, JS, JQuery, HTML, Bootstrap, Thymeleaf.
+Technologies: RESTful Web Service, Spring Boot, Spring Data JPA, MySql, XML, JSON, Junit, Mockito, RegExp, JS, JQuery, HTML, Bootstrap, Thymeleaf.
 
 
 Web проект “Телефонная книга”.
@@ -60,6 +60,6 @@ CREATE DATABASE IF NOT EXISTS phone_book;
 
 CREATE USER 'user'@'localhost' IDENTIFIED BY 'password';
 
-CREATE TABLE IF NOT EXISTS phone_book.users (id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT, fullname varchar(45), login varchar(45), password varchar(45), idsession BIGINT, INDEX(login));
+CREATE TABLE IF NOT EXISTS phone_book.user (id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT, fullname varchar(45), login varchar(45), password varchar(45), idsession BIGINT, INDEX(login));
 
-CREATE TABLE IF NOT EXISTS phone_book.contacts (id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT, iduser BIGINT NOT NULL, lastname varchar(45), name varchar(45), middlename varchar(45), mobilephone varchar(45), homephone varchar(45), address varchar(45), email varchar(45), INDEX(lastName));
+CREATE TABLE IF NOT EXISTS phone_book.contact (id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT, iduser BIGINT NOT NULL, lastname varchar(45), name varchar(45), middlename varchar(45), mobilephone varchar(45), homephone varchar(45), address varchar(45), email varchar(45), INDEX(lastName));

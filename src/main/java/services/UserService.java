@@ -1,12 +1,11 @@
 package services;
 
 import entity.User;
-import interfaces.UserDAO;
+import dao.UserDAO;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 
@@ -24,17 +23,12 @@ public class UserService {
     @Resource
     private Map<String, UserDAO> daoServices;
 
-    public void setDataSource(DataSource dataSource, String typeDB, String pathToFileDB) {
+    public void setDataSource(String typeDB, String pathToFileDB) {
         this.dao = daoServices.get("user" + typeDB.toLowerCase());
-        logger.info("*** Inject UserDAO in UserService: " + dao);
-        if ("mysql".equals(typeDB.toLowerCase())) {
-            this.dao.setDataSource(dataSource);
-        } else if ("xml".equals(typeDB.toLowerCase())) {
-            this.dao.setTypeDB(pathToFileDB);
-        } else if ("json".equals(typeDB.toLowerCase())) {
+        if ("mysql".equals(typeDB.toLowerCase()) || "xml".equals(typeDB.toLowerCase()) || "json".equals(typeDB.toLowerCase())) {
             this.dao.setTypeDB(pathToFileDB);
         } else {
-            logger.error("*** Class " + this.getClass().getName() + ": Type data base is not known: " + typeDB + ". Refer parameter 'typeDB' in config file.");
+            logger.error("Type data base is not known: '" + typeDB + "'. Refer parameter 'typeDB' in config file.");
             System.exit(1);
         }
     }

@@ -1,13 +1,11 @@
 package dao;
 
 import entity.User;
-import interfaces.UserDAO;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +19,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class UserDAOXML extends AbstractDAO implements UserDAO{
     private final static Logger logger = getLogger(UserDAOXML.class);
     private File inputFile;
-    private SAXReader reader;
     private Document document;
     private String pathToNode;
+    private SAXReader reader;
 
-    private UserDAOXML() {
+    public UserDAOXML() {
         reader = new SAXReader();
     }
 
@@ -44,11 +42,6 @@ public class UserDAOXML extends AbstractDAO implements UserDAO{
         } catch (DocumentException e) {
             logger.error("Can't access to file DB in setTypeDB: '" + pathToFileDB + "users.xml" + "'", e.getMessage());
         }
-    }
-
-    @Override
-    public void setDataSource(DataSource dataSource) {
-
     }
 
 

@@ -1,6 +1,5 @@
 import dao.ContactDAOmySQL;
 import entity.Contact;
-import org.apache.tomcat.jdbc.pool.DataSource;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -33,12 +32,6 @@ public class TestContactDAOmySQL {
     public void testContactDAOmySQLdelete() {
         ContactDAOmySQL mock = mock(ContactDAOmySQL.class);
         doThrow(new RuntimeException()).when(mock).delete("id");
-    }
-
-    @Test
-    public void testContactDAOmySQLsetDataSource() {
-        ContactDAOmySQL mock = mock(ContactDAOmySQL.class);
-        doThrow(new RuntimeException()).when(mock).setDataSource(new DataSource());
     }
 
     @Test

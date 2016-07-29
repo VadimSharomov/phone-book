@@ -14,8 +14,11 @@ public class UtilsRest {
     private final static Logger logger = getLogger(UtilsRest.class);
 
     public static boolean isSessionOver(User user, String idSession) {
-        logger.info("Session is over for '" + user + "'");
-        return (user.getIdSession() != Long.parseLong(idSession));
+        if ((user.getIdSession() != Long.parseLong(idSession))) {
+            logger.info("Session is over for '" + user + "'");
+            return true;
+        }
+        return false;
     }
 
     public static void closeSession(UserService userService, String idUser, String idSession) {
@@ -36,7 +39,7 @@ public class UtilsRest {
     }
 
     public static long generateIdSession() {
-        Constants.getInitIdSessionList().add(System.currentTimeMillis());
+        Constants.addInitIdSession(System.currentTimeMillis());
         return Constants.getInitIdSessionList().get(Constants.getInitIdSessionList().size() - 1);
     }
 }

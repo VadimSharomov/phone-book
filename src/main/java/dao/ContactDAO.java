@@ -1,8 +1,7 @@
-package interfaces;
+package dao;
 
 import entity.Contact;
 
-import javax.sql.DataSource;
 import java.util.List;
 
 /**
@@ -11,8 +10,6 @@ import java.util.List;
 public interface ContactDAO {
 
     void setTypeDB(String pathToFileDB);
-
-    void setDataSource(DataSource dataSource);
 
     void create(String userId, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email);
 

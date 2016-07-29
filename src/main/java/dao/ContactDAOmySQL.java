@@ -1,14 +1,11 @@
 package dao;
 
 import entity.Contact;
-import interfaces.ContactDAO;
 import org.slf4j.Logger;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import repository.ContactRepository;
 
-import javax.sql.DataSource;
+import javax.annotation.Resource;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -17,14 +14,11 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author Vadim Sharomov
  */
 @Service("contactmysql")
-public class ContactDAOmySQL extends AbstractDAO implements ContactDAO{
+public class ContactDAOmySQL extends AbstractDAO implements ContactDAO {
     private final static Logger logger = getLogger(ContactDAOmySQL.class);
-    private String table;
-    private JdbcTemplate jdbcTemplateObject;
 
-    private ContactDAOmySQL() {
-        this.table = "contacts";
-    }
+    @Resource
+    private ContactRepository contactRepository;
 
     @Override
     public void setTypeDB(String pathToFileDB) {
@@ -32,73 +26,32 @@ public class ContactDAOmySQL extends AbstractDAO implements ContactDAO{
     }
 
     @Override
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplateObject = new JdbcTemplate(dataSource);
-    }
-
-    @Override
     public Contact getContactById(String id) {
-        String SQL = "SELECT * FROM " + table + " WHERE id = ?";
-        try {
-            return jdbcTemplateObject.queryForObject(SQL,
-                    new Object[]{id}, new ContactMapper());
-        } catch (IncorrectResultSizeDataAccessException e) {
-            logger.error("Incorrect result size data access exception in getContactById", e.getMessage());
-            return null;
-        }
+        return contactRepository.getContactById(Long.valueOf(id));
     }
 
     @Override
     public List<Contact> getByIdUser(String idUser) {
-        String SQL = "SELECT * FROM " + table + " WHERE iduser = ?";
-        try {
-            return jdbcTemplateObject.query(SQL,
-                    new Object[]{idUser}, new ContactMapper());
-        } catch (DataAccessException e) {
-            logger.error("Data access exception in getByIdUser", e.getMessage());
-            return null;
-        }
+        return contactRepository.findContactByIdUser(Long.valueOf(idUser));
     }
 
     @Override
     public List<Contact> getByIdUserAndName(String idUser, String lastName, String name, String mobilePhone) {
-        String SQL = "SELECT * FROM " + table + " WHERE lastName LIKE ? AND name like ? AND mobilePhone like ? AND iduser = ?";
-        try {
-            return jdbcTemplateObject.query(SQL,
-                    new Object[]{"%" + lastName + "%", "%" + name + "%", "%" + mobilePhone + "%", idUser}, new ContactMapper());
-        } catch (DataAccessException e) {
-            logger.error("Data access exception in getByIdUserAndName", e.getMessage());
-            return null;
-        }
+        return contactRepository.getByIdUserAndName(Long.valueOf(idUser), lastName, name, mobilePhone);
     }
 
     @Override
-    public void create(String iduser, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
-        String SQL = "INSERT INTO " + table + " (iduser, lastName, name, middleName, mobilePhone, homePhone, address, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try {
-            jdbcTemplateObject.update(SQL, iduser, lastName, name, middleName, mobilePhone, homePhone, address, email);
-        } catch (DataAccessException e) {
-            logger.error("Data access exception in create contact", e.getMessage());
-        }
+    public void create(String idUser, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
+        contactRepository.save(new Contact(Long.valueOf(idUser), lastName, name, middleName, mobilePhone, homePhone, address, email));
     }
 
     @Override
     public void update(String id, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
-        String SQL = "update " + table + " set lastName = ?, name = ?, middleName = ?, mobilePhone = ?, homePhone = ?, address = ?, email = ? where id = ?";
-        try {
-            jdbcTemplateObject.update(SQL, lastName, name, middleName, mobilePhone, homePhone, address, email, id);
-        } catch (DataAccessException e) {
-            logger.error("Data access exception in update contact", e.getMessage());
-        }
+        contactRepository.updateContact(lastName, name, middleName, mobilePhone, homePhone, address, email, Long.valueOf(id));
     }
 
     @Override
     public void delete(String id) {
-        String SQL = "delete from " + table + " where id = ?";
-        try {
-            jdbcTemplateObject.update(SQL, id);
-        } catch (DataAccessException e) {
-            logger.error("Data access exception in delete contact", e.getMessage());
-        }
+        contactRepository.deleteById(Long.valueOf(id));
     }
 }

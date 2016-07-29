@@ -1,8 +1,7 @@
-package interfaces;
+package dao;
 
 import entity.User;
 
-import javax.sql.DataSource;
 import java.util.List;
 
 /**
@@ -11,8 +10,6 @@ import java.util.List;
 public interface UserDAO {
 
     void setTypeDB(String pathToFileDB);
-
-    void setDataSource(DataSource dataSource);
 
     void create(String fullName, String login, String password);
 

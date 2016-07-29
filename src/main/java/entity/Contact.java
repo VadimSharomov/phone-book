@@ -1,21 +1,54 @@
 package entity;
 
+import javax.persistence.*;
+
 /**
  * @author Vadim Sharomov
  */
+@Entity
+@Table(name = "contact")
 public class Contact {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    @Column(name = "iduser")
     private long userId;
+
+    @Column(name = "lastname")
     private String lastName;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "middlename")
     private String middleName;
+
+    @Column(name = "mobilephone")
     private String mobilePhone;
+
+    @Column(name = "homephone")
     private String homePhone;
+
+    @Column(name = "address")
     private String address;
+
+    @Column(name = "email")
     private String email;
 
     public Contact() {
 
+    }
+
+    public Contact(long userId, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
+        this.userId = userId;
+        this.lastName = lastName;
+        this.name = name;
+        this.middleName = middleName;
+        this.mobilePhone = mobilePhone;
+        this.homePhone = homePhone;
+        this.address = address;
+        this.email = email;
     }
 
     public String getAddress() {

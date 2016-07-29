@@ -1,7 +1,6 @@
 package dao;
 
 import entity.User;
-import interfaces.UserDAO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -9,17 +8,14 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-
 /**
  * @author Vadim Sharomov
- * Implementation JSON format
  */
 @Service("userjson")
 public class UserDAOJSON extends AbstractDAO implements UserDAO{
@@ -51,11 +47,6 @@ public class UserDAOJSON extends AbstractDAO implements UserDAO{
                 logger.error("Can't access to file DB in setTypeDB: '" + pathToFileDB + nameFile + "'", e.getMessage());
             }
         }
-
-    }
-
-    @Override
-    public void setDataSource(DataSource dataSource) {
 
     }
 
@@ -120,11 +111,11 @@ public class UserDAOJSON extends AbstractDAO implements UserDAO{
                 }
             }
         } catch (FileNotFoundException e) {
-            logger.error("Can't getUserById from file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
+            logger.error("Can't getContactById from file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (IOException e) {
-            logger.error("Can't access to file DB in getUserById: '" + pathToFileDB + nameFile + "'", e.getMessage());
+            logger.error("Can't access to file DB in getContactById: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (ParseException e) {
-            logger.error("Can't parse file DB for getUserById: '" + pathToFileDB + nameFile + "'", e.getMessage());
+            logger.error("Can't parse file DB for getContactById: '" + pathToFileDB + nameFile + "'", e.getMessage());
         }
         return null;
     }

@@ -5,8 +5,6 @@ import entity.User;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
-import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +18,7 @@ import services.UtilsRest;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
@@ -55,30 +54,17 @@ public class StartController {
                 InputStream input = new FileInputStream(pathToConfigFile);
                 Properties properties = new Properties();
                 properties.load(input);
-
-                Constants.setHostDB(properties.getProperty("hostDB"));
+                logger.info("*** Config file has read '" + pathToConfigFile + "'");
                 Constants.setPathToDBFiles(properties.getProperty("pathToDBFiles"));
                 Constants.setTypeDB(properties.getProperty("typeDB"));
-                Constants.setUserDB(properties.getProperty("userDB"));
-                Constants.setUserPasswordDB(properties.getProperty("userPasswordDB"));
+                userService.setDataSource(Constants.getTypeDB(), Constants.getPathToDBFiles());
+                contactService.setDataSource(Constants.getTypeDB(), Constants.getPathToDBFiles());
                 input.close();
-                logger.info("*** Config file has read '" + pathToConfigFile + "'");
+                logger.info("*** All constants have initialised");
             } catch (IOException e) {
                 logger.error("File properties not found in this path: '" + pathToConfigFile + "'", e.getMessage());
                 System.exit(1);
             }
-        }
-
-        @Bean
-        public DriverManagerDataSource getMySQLDriverManagerDatasource() {
-            DriverManagerDataSource dataSource = new DriverManagerDataSource(Constants.getHostDB(), Constants.getUserDB(), Constants.getUserPasswordDB());
-            dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            userService.setDataSource(dataSource, Constants.getTypeDB(), Constants.getPathToDBFiles());
-            contactService.setDataSource(dataSource, Constants.getTypeDB(), Constants.getPathToDBFiles());
-            logger.info("*** All constants have initialised");
-            logger.info("*** Inject contactService in StartController: " + contactService);
-            logger.info("*** Inject userService in StartController: " + userService);
-            return dataSource;
         }
     }
 
@@ -131,6 +117,13 @@ public class StartController {
             return "Home";
         }
         List<Contact> contacts = contactService.getByIdUserAndName(idUser, lastName, name, mobilePhone);
+        contacts.sort(new Comparator<Contact>() {
+            @Override
+            public int compare(Contact o1, Contact o2) {
+                int resCompare = String.CASE_INSENSITIVE_ORDER.compare(o1.getLastName(), o2.getLastName());
+                return (resCompare != 0) ? resCompare : o1.getLastName().compareTo(o2.getLastName());
+            }
+        });
         model.addAttribute("idUser", idUser);
         model.addAttribute("userLogin", user.getLogin());
         model.addAttribute("contacts", contacts);
@@ -218,6 +211,13 @@ public class StartController {
         }
         User user = userService.getUserById(idUser);
         List<Contact> contacts = contactService.getByIdUser(idUser);
+        contacts.sort(new Comparator<Contact>() {
+            @Override
+            public int compare(Contact o1, Contact o2) {
+                int resCompare = String.CASE_INSENSITIVE_ORDER.compare(o1.getLastName(), o2.getLastName());
+                return (resCompare != 0) ? resCompare : o1.getLastName().compareTo(o2.getLastName());
+            }
+        });
         model.addAttribute("userLogin", user.getLogin());
         model.addAttribute("contacts", contacts);
         return "ViewContact";

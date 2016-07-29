@@ -24,7 +24,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 @Controller
 public class ControllerAuthorisation {
-    private final static Logger logger = getLogger(StartController.class);
+    private final static Logger logger = getLogger(ControllerAuthorisation.class);
 
     @Autowired
     private UserService userService;
@@ -215,7 +215,7 @@ public class ControllerAuthorisation {
             model.addAttribute("address", contact.getAddress());
             model.addAttribute("email", contact.getEmail());
 
-            logger.info("User: '" + user + "' edits contact '" + contact.getId() + "'");
+            logger.info("User edits contact : '" + user + "' contact '" + contact.getId() + "'");
             return "CreateContact";
         }
     }

@@ -1,5 +1,4 @@
 import entity.Contact;
-import org.apache.tomcat.jdbc.pool.DataSource;
 import org.testng.annotations.Test;
 import services.ContactService;
 
@@ -19,7 +18,7 @@ public class TestContactService {
     @Test
     public void testContactServiceSetDataSource() {
         ContactService mock = mock(ContactService.class);
-        doThrow(new RuntimeException()).when(mock).setDataSource(new DataSource(), "typeDB", "pathToFileDB");
+        doThrow(new RuntimeException()).when(mock).setDataSource("typeDB", "pathToFileDB");
     }
 
     @Test

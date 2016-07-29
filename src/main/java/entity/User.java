@@ -1,27 +1,27 @@
 package entity;
 
-import org.slf4j.Logger;
-import rest.StartController;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-import static org.slf4j.LoggerFactory.getLogger;
+import javax.persistence.*;
 
 /**
- * @autor Vadim Sharomov
+ * @author Vadim Sharomov
  */
 @Entity
+@Table(name = "user")
 public class User {
-    private final static Logger logger = getLogger(StartController.class);
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    @Column(name = "idsession")
     private long idSession;
+
+    @Column(name = "fullname")
     private String fullName;
+
+    @Column(name = "login")
     private String login;
+
+    @Column(name = "password")
     private String password;
 
     public User(){}

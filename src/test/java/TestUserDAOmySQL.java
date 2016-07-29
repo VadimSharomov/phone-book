@@ -1,6 +1,5 @@
 import dao.UserDAOmySQL;
 import entity.User;
-import org.apache.tomcat.jdbc.pool.DataSource;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -25,12 +24,6 @@ public class TestUserDAOmySQL {
     public void testUserDAOmySQLUpdateIdSession() {
         UserDAOmySQL mock = mock(UserDAOmySQL.class);
         doThrow(new RuntimeException()).when(mock).updateIdSession(1, 1);
-    }
-
-    @Test
-    public void testUserDAOmySQLSetDataSource() {
-        UserDAOmySQL mock = mock(UserDAOmySQL.class);
-        doThrow(new RuntimeException()).when(mock).setDataSource(new DataSource());
     }
 
     @Test

@@ -1,5 +1,4 @@
 import entity.User;
-import org.apache.tomcat.jdbc.pool.DataSource;
 import org.testng.annotations.Test;
 import services.UserService;
 
@@ -45,7 +44,7 @@ public class TestUserService {
     @Test
     public void testUserServiceSetDataSource() {
        UserService mock = mock(UserService.class);
-        doThrow(new RuntimeException()).when(mock).setDataSource(new DataSource(), "typeDB", "pathToFileDB");
+        doThrow(new RuntimeException()).when(mock).setDataSource("typeDB", "pathToFileDB");
     }
 
     @Test
