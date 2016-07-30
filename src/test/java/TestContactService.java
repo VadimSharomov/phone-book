@@ -12,9 +12,6 @@ import static org.testng.Assert.assertEquals;
  * Created by Vadim
  */
 public class TestContactService {
-    /**
-     * TestREST Contact service
-     */
     @Test
     public void testContactServiceSetDataSource() {
         ContactService mock = mock(ContactService.class);

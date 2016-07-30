@@ -12,9 +12,6 @@ import static org.mockito.Mockito.*;
  * Created by Vadim
  */
 public class TestUserDAOXML {
-    /**
-     * TestREST User DAO MXL
-     */
     @SuppressWarnings("Duplicates")
     @Test
     public void testUserDAOXMLgetById() {

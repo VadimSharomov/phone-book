@@ -12,9 +12,6 @@ import static org.testng.Assert.assertEquals;
  * Created by Vadim
  */
 public class TestContactDAOXML {
-    /**
-     * TestREST Contact DAO XML
-     */
     @Test
     public void testContactDAOXMLcreate() {
         ContactDAOXML mock = mock(ContactDAOXML.class);

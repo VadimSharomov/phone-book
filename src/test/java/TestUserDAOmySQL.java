@@ -11,9 +11,6 @@ import static org.testng.Assert.assertEquals;
  * Created by Vadim
  */
 public class TestUserDAOmySQL {
-    /**
-     * TestREST User DAO mySQL
-     */
     @Test
     public void testUserDAOmySQLCreate() {
         UserDAOmySQL mock = mock(UserDAOmySQL.class);

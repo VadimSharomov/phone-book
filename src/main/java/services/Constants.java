@@ -12,7 +12,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * @author by Vadim Sharomov
  */
-public class Constants {
+public final class Constants {
     private final static Logger logger = getLogger(Constants.class);
     private static String typeDB;
     private static String pathToDBFiles;

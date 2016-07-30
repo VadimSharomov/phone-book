@@ -45,7 +45,7 @@ public class StartController {
             List<String> listArgs = args.getNonOptionArgs();
 
             if (listArgs.size() == 0) {
-                logger.error("In arguments JVM not found the path to file.properties!");
+                logger.error("In arguments JVM not found the path to file.properties: 'application.properties'!");
                 System.exit(1);
             }
             String pathToConfigFile = listArgs.get(0);

@@ -12,9 +12,6 @@ import static org.testng.Assert.assertEquals;
  * Created by Vadim
  */
 public class TestContactDAOJSON {
-    /**
-     * TestREST Contact DAO JSON
-     */
     @Test
     public void testContactDAOJSONCreate() {
         ContactDAOJSON mock = mock(ContactDAOJSON.class);

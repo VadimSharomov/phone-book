@@ -11,9 +11,6 @@ import static org.mockito.Mockito.*;
  * Created by Vadim
  */
 public class TestUserDAOJSON {
-    /**
-     * TestREST User DAO JSON
-     */
     @SuppressWarnings("Duplicates")
     @Test
     public void testUserDAOJSONGetById() {
