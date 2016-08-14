@@ -44,11 +44,13 @@ public class StartController {
         public MyBean(ApplicationArguments args) {
             List<String> listArgs = args.getNonOptionArgs();
 
+            String pathToConfigFile = "src/main/resources/application.properties";
             if (listArgs.size() == 0) {
                 logger.error("In arguments JVM not found the path to file.properties: 'application.properties'!");
-                System.exit(1);
+                logger.info("It will use as default the path: '" + pathToConfigFile + "'");
+            } else {
+                pathToConfigFile = listArgs.get(0);
             }
-            String pathToConfigFile = listArgs.get(0);
 
             try {
                 InputStream input = new FileInputStream(pathToConfigFile);

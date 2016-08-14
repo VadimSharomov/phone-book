@@ -1,6 +1,6 @@
 import dao.UserDAOmySQL;
 import entity.User;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
@@ -15,12 +15,6 @@ public class TestUserDAOmySQL {
     public void testUserDAOmySQLCreate() {
         UserDAOmySQL mock = mock(UserDAOmySQL.class);
         doThrow(new RuntimeException()).when(mock).create("fullName", "login", "password");
-    }
-
-    @Test
-    public void testUserDAOmySQLUpdateIdSession() {
-        UserDAOmySQL mock = mock(UserDAOmySQL.class);
-        doThrow(new RuntimeException()).when(mock).updateIdSession(1, 1);
     }
 
     @Test

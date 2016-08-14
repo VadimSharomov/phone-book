@@ -1,6 +1,6 @@
 import dao.ContactDAOmySQL;
 import entity.Contact;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;

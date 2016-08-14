@@ -1,7 +1,7 @@
+import dao.UserDAO;
 import dao.UserDAOXML;
 import entity.User;
-import dao.UserDAO;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
@@ -29,11 +29,6 @@ public class TestUserDAOXML {
         doThrow(new RuntimeException()).when(mock).create("fullName", "login", "password");
     }
 
-    @Test
-    public void testUserDAOXMLupdateIdSession() {
-        UserDAOXML mock = mock(UserDAOXML.class);
-        doThrow(new RuntimeException()).when(mock).updateIdSession(1, 1);
-    }
 
     @SuppressWarnings("Duplicates")
     @Test

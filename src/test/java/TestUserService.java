@@ -1,28 +1,40 @@
+import dao.UserDAO;
 import entity.User;
-import org.testng.annotations.Test;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import rest.Application;
 import services.UserService;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
- * Created by Vadim
+ * @author Vadim Sharomov
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TestUserService {
-    /**
-     * TestREST User service
-     */
-    @SuppressWarnings("Duplicates")
+
+    @Autowired
+    private Map<String, UserDAO> daoServices;
+
+    @Autowired
+    private UserService userService;
+
     @Test
     public void testUserServiceGetByLogin() {
         UserService mock = mock(UserService.class);
         User user = new User();
-        when(mock.getByLogin("login")).thenReturn(user);
-        when(mock.getByLogin("111")).thenReturn(null);
-        assertEquals(user, mock.getByLogin("login"));
-        assertEquals(null, mock.getByLogin("111"));
+        when(mock.getByLogin("1")).thenReturn(user);
+        when(mock.getByLogin("aaa")).thenReturn(null);
+        assertEquals(user, mock.getByLogin("1"));
+        assertEquals(null, mock.getByLogin("aaa"));
     }
 
     @Test
@@ -42,26 +54,8 @@ public class TestUserService {
     }
 
     @Test
-    public void testUserServiceSetDataSource() {
-       UserService mock = mock(UserService.class);
-        doThrow(new RuntimeException()).when(mock).setDataSource("typeDB", "pathToFileDB");
-    }
-
-    @Test
-    public void testUserServiceOpenSession() {
-        UserService mock = mock(UserService.class);
-        doThrow(new RuntimeException()).when(mock).openSession(1, "11111111");
-    }
-
-    @Test
-    public void testUserServiceCloseSession() {
-        UserService mock = mock(UserService.class);
-        doThrow(new RuntimeException()).when(mock).closeSession(0);
-    }
-
-    @Test
     public void testUserServiceGetAllUsers() {
-       UserService mock = mock(UserService.class);
+        UserService mock = mock(UserService.class);
         ArrayList<User> users = new ArrayList<>();
         when(mock.getAllUsers()).thenReturn(users);
         assertEquals(users, mock.getAllUsers());

@@ -1,6 +1,6 @@
 import dao.UserDAOJSON;
 import entity.User;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
@@ -26,12 +26,6 @@ public class TestUserDAOJSON {
     public void testUserDAOJSONCreate() {
         UserDAOJSON mock = mock(UserDAOJSON.class);
         doThrow(new RuntimeException()).when(mock).create("fullName", "login", "password");
-    }
-
-    @Test
-    public void testUserDAOJSONUpdateIdSession() {
-        UserDAOJSON mock = mock(UserDAOJSON.class);
-        doThrow(new RuntimeException()).when(mock).updateIdSession(1, 1);
     }
 
     @SuppressWarnings("Duplicates")

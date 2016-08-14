@@ -1,9 +1,16 @@
+import dao.ContactDAO;
 import entity.Contact;
-import org.testng.annotations.Test;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import rest.Application;
 import services.ContactService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
@@ -11,12 +18,16 @@ import static org.testng.Assert.assertEquals;
 /**
  * Created by Vadim
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TestContactService {
-    @Test
-    public void testContactServiceSetDataSource() {
-        ContactService mock = mock(ContactService.class);
-        doThrow(new RuntimeException()).when(mock).setDataSource("typeDB", "pathToFileDB");
-    }
+
+    @Autowired
+    private Map<String, ContactDAO> daoServices;
+
+    @Autowired
+    private ContactService userService;
+
 
     @Test
     public void testContactServiceCreate() {
