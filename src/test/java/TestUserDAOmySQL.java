@@ -12,11 +12,6 @@ import static org.mockito.Mockito.*;
  * Created by Vadim
  */
 public class TestUserDAOmySQL {
-    @Test
-    public void testUserDAOmySQLCreate() {
-        UserDAOmySQL mock = mock(UserDAOmySQL.class);
-        doThrow(new RuntimeException()).when(mock).create("fullName", "login", "password");
-    }
 
     @Test
     public void testUserDAOmySQLGetById() {

@@ -12,23 +12,6 @@ import static org.mockito.Mockito.*;
  * Created by Vadim
  */
 public class TestContactDAOJSON {
-    @Test
-    public void testContactDAOJSONCreate() {
-        ContactDAOJSON mock = mock(ContactDAOJSON.class);
-        doThrow(new RuntimeException()).when(mock).create("userId", "lastName", "name", "middleName", "mobilePhone", "homePhone", "address", "email");
-    }
-
-    @Test
-    public void testContactDAOJSONUpdate() {
-        ContactDAOJSON mock = mock(ContactDAOJSON.class);
-        doThrow(new RuntimeException()).when(mock).update("userId", "lastName", "name", "middleName", "mobilePhone", "homePhone", "address", "email");
-    }
-
-    @Test
-    public void testContactDAOJSONDelete() {
-        ContactDAOJSON mock = mock(ContactDAOJSON.class);
-        doThrow(new RuntimeException()).when(mock).delete("id");
-    }
 
     @Test
     public void testContactDAOJSONGetById() {

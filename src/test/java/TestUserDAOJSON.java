@@ -22,12 +22,6 @@ public class TestUserDAOJSON {
         assertEquals(null, mock.getUserById("a"));
     }
 
-    @Test
-    public void testUserDAOJSONCreate() {
-        UserDAOJSON mock = mock(UserDAOJSON.class);
-        doThrow(new RuntimeException()).when(mock).create("fullName", "login", "password");
-    }
-
     @SuppressWarnings("Duplicates")
     @Test
     public void testUserDAOJSONGetByLogin() {

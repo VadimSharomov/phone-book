@@ -13,23 +13,6 @@ import static org.mockito.Mockito.*;
  * Created by Vadim
  */
 public class TestContactDAOXML {
-    @Test
-    public void testContactDAOXMLcreate() {
-        ContactDAOXML mock = mock(ContactDAOXML.class);
-        doThrow(new RuntimeException()).when(mock).create("userId", "lastName", "name", "middleName", "mobilePhone", "homePhone", "address", "email");
-    }
-
-    @Test
-    public void testContactDAOXMLupdate() {
-        ContactDAOXML mock = mock(ContactDAOXML.class);
-        doThrow(new RuntimeException()).when(mock).update("userId", "lastName", "name", "middleName", "mobilePhone", "homePhone", "address", "email");
-    }
-
-    @Test
-    public void testContactDAOXMLdelete() {
-        ContactDAOXML mock = mock(ContactDAOXML.class);
-        doThrow(new RuntimeException()).when(mock).delete("id");
-    }
 
     @Test
     public void testContactDAOXMLgetById() {

@@ -23,12 +23,6 @@ public class TestUserDAOXML {
         assertEquals(null, userDAOXML.getUserById("a"));
     }
 
-    @Test
-    public void testUserDAOXMLcreate() {
-        UserDAOXML mock = mock(UserDAOXML.class);
-        doThrow(new RuntimeException()).when(mock).create("fullName", "login", "password");
-    }
-
 
     @SuppressWarnings("Duplicates")
     @Test

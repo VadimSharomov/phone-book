@@ -145,7 +145,7 @@ public class ControllerAuthorisation {
             model.addAttribute("warningMessage", "Session is over, you need to login!");
             return "Home";
         }
-        User user = userService.getUserById(idUser);
+        User user = userService.getById(idUser);
         if (UtilsRest.isSessionOver(user, idSession)) {
             model.addAttribute("myipaddress", Constants.getMyIP());
             model.addAttribute("idSessionValue", String.valueOf(UtilsRest.generateIdSession()));
@@ -184,7 +184,7 @@ public class ControllerAuthorisation {
             return "Home";
         }
 
-        User user = userService.getUserById(idUser);
+        User user = userService.getById(idUser);
         if (UtilsRest.isSessionOver(user, idSession)) {
             model.addAttribute("myipaddress", Constants.getMyIP());
             model.addAttribute("idSessionValue", idSession);

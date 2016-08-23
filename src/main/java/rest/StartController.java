@@ -113,7 +113,7 @@ public class StartController {
             model.addAttribute("warningMessage", "Session is over, you need to login!");
             return "Home";
         }
-        User user = userService.getUserById(idUser);
+        User user = userService.getById(idUser);
         if (UtilsRest.isSessionOver(user, idSession)) {
             model.addAttribute("warningMessage", "Session is over, you need to login!");
             return "Home";
@@ -140,7 +140,7 @@ public class StartController {
             @RequestParam(value = "login", required = false) String login,
             @RequestParam(value = "password", required = false) String password, Model model) {
 
-        User user = userService.getUserById(idUser);
+        User user = userService.getById(idUser);
         model.addAttribute("myipaddress", Constants.getMyIP());
         model.addAttribute("idUser", idUser);
         model.addAttribute("idSessionValue", idSession);//String.valueOf(user.getIdSession())
@@ -211,7 +211,7 @@ public class StartController {
             model.addAttribute("warningMessage", "Session is over, you need to login!");
             return "Home";
         }
-        User user = userService.getUserById(idUser);
+        User user = userService.getById(idUser);
         List<Contact> contacts = contactService.getByIdUser(idUser);
         contacts.sort(new Comparator<Contact>() {
             @Override

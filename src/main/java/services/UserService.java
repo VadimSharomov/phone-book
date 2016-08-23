@@ -33,6 +33,10 @@ public class UserService {
         }
     }
 
+    public void create(String fullName, String login, String password) {
+        dao.create(fullName, login, password);
+    }
+
     public List<User> getAllUsers() {
         return dao.getAllUsers();
     }
@@ -41,7 +45,7 @@ public class UserService {
         return dao.getByLogin(login);
     }
 
-    public User getUserById(String idUser) {
+    public User getById(String idUser) {
         return dao.getUserById(idUser);
     }
 
@@ -52,11 +56,6 @@ public class UserService {
     public void closeSession(long id) {
         dao.updateIdSession(id, 0);
     }
-
-    public void create(String fullName, String login, String password) {
-        dao.create(fullName, login, password);
-    }
-
 }
 
 

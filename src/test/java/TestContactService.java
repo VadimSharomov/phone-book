@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 
 /**
- * Created by Vadim
+ * @author Vadim Sharomov
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -28,19 +28,6 @@ public class TestContactService {
 
     @Autowired
     private ContactService userService;
-
-
-    @Test
-    public void testContactServiceCreate() {
-        ContactService mock = mock(ContactService.class);
-        doThrow(new RuntimeException()).when(mock).create("idUser", "lastName", "name", "middleName", "mobilePhone", "homePhone", "address", "email");
-    }
-
-    @Test
-    public void testContactServiceUpdate() {
-        ContactService mock = mock(ContactService.class);
-        doThrow(new RuntimeException()).when(mock).update("idUser", "idContact", "lastName", "name", "middleName", "mobilePhone", "homePhone", "address", "email");
-    }
 
     @Test
     public void testContactServiceDelete() {

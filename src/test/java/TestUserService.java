@@ -41,17 +41,12 @@ public class TestUserService {
     public void testUserServiceGetById() {
         UserService mock = mock(UserService.class);
         User user = new User();
-        when(mock.getUserById("1")).thenReturn(user);
-        when(mock.getUserById("aaa")).thenReturn(null);
-        assertEquals(user, mock.getUserById("1"));
-        assertEquals(null, mock.getUserById("aaa"));
+        when(mock.getById("1")).thenReturn(user);
+        when(mock.getById("aaa")).thenReturn(null);
+        assertEquals(user, mock.getById("1"));
+        assertEquals(null, mock.getById("aaa"));
     }
 
-    @Test
-    public void testUserServiceCreate() {
-        UserService mock = mock(UserService.class);
-        doThrow(new RuntimeException()).when(mock).create("fullName", "login", "password");
-    }
 
     @Test
     public void testUserServiceGetAllUsers() {

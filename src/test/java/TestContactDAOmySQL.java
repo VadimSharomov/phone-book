@@ -13,23 +13,6 @@ import static org.mockito.Mockito.*;
  * Created by Vadim
  */
 public class TestContactDAOmySQL {
-    @Test
-    public void testContactDAOmySQLcreate() {
-        ContactDAOmySQL mock = mock(ContactDAOmySQL.class);
-        doThrow(new RuntimeException()).when(mock).create("userId", "lastName", "name", "middleName", "mobilePhone", "homePhone", "address", "email");
-    }
-
-    @Test
-    public void testContactDAOmySQLupdate() {
-        ContactDAOmySQL mock = mock(ContactDAOmySQL.class);
-        doThrow(new RuntimeException()).when(mock).update("userId", "lastName", "name", "middleName", "mobilePhone", "homePhone", "address", "email");
-    }
-
-    @Test
-    public void testContactDAOmySQLdelete() {
-        ContactDAOmySQL mock = mock(ContactDAOmySQL.class);
-        doThrow(new RuntimeException()).when(mock).delete("id");
-    }
 
     @Test
     public void testContactDAOmySQLgetById() {
