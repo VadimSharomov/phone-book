@@ -18,10 +18,10 @@ public final class Constants {
     private static String pathToDBFiles;
     private static String myIP;
     private static List<Long> initIdSessionList = new ArrayList<>();
-    private static final String PATTERN_LOGIN = "[a-z,A-Z]{3,}";
-    private static final String PATTERN_MOBILE_PHONE_UKR = "[+][3][8][0][(][3569][0-9][)][0-9]{7}";
-    private static final String PATTERN_STATIONARY_PHONE_UKR = "[+][3][8][0][(][3456][0-9][)][0-9]{7}";
-    private static final String PATTERN_EMAIL = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
+    private static final String PATTERN_LOGIN_REGEXP = "[a-z,A-Z]{3,}";
+    private static final String PATTERN_MOBILE_PHONE_UKR_REGEXP = "[+][3][8][0][(][3569][0-9][)][0-9]{7}";
+    private static final String PATTERN_STATIONARY_PHONE_UKR_REGEXP = "[+][3][8][0][(][3456][0-9][)][0-9]{7}";
+    private static final String PATTERN_EMAIL_REGEXP = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
 
     static {
         try {
@@ -62,18 +62,18 @@ public final class Constants {
     }
 
     public static String getPatternEmail() {
-        return PATTERN_EMAIL;
+        return PATTERN_EMAIL_REGEXP;
     }
 
     public static String getPatternMobilePhoneUkr() {
-        return PATTERN_MOBILE_PHONE_UKR;
+        return PATTERN_MOBILE_PHONE_UKR_REGEXP;
     }
 
     public static String getPatternStationaryPhoneUkr() {
-        return PATTERN_STATIONARY_PHONE_UKR;
+        return PATTERN_STATIONARY_PHONE_UKR_REGEXP;
     }
 
     public static String getPatternLogin() {
-        return PATTERN_LOGIN;
+        return PATTERN_LOGIN_REGEXP;
     }
 }

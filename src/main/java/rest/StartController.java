@@ -41,7 +41,7 @@ public class StartController {
     @Component
     public class MyBean {
         @Autowired
-        public MyBean(ApplicationArguments args) {
+        public MyBean(ApplicationArguments args)  {
             List<String> listArgs = args.getNonOptionArgs();
 
             String pathToConfigFile = "src/main/resources/application.properties";
