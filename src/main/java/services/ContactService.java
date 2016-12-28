@@ -26,7 +26,7 @@ public class ContactService {
     public void setDataSource(String typeDB, String pathToFileDB) {
         this.dao = daoServices.get("contact" + typeDB);
         this.dao.setTypeDB(pathToFileDB);
-        if (!Constants.getPosibleTypesDB().contains(typeDB)) {
+        if (!Constants.getPossibleTypesDB().contains(typeDB)) {
             logger.error("Type data base is not known: '" + typeDB + "'. Refer parameter 'typeDB' in config file.");
             System.exit(1);
         }
