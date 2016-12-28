@@ -46,11 +46,11 @@ public class ControllerAuthorisation {
         }
 
         if ((login == null) || (login.length() < 3)) {
-            model.addAttribute("warningMessage", "Login is to short!");
+            model.addAttribute("warningMessage", "Login is to short: < 3 letters!");
             return "Home";
         }
         if ((password == null) || (password.length() < 5)) {
-            model.addAttribute("warningMessage", "Password is to short!");
+            model.addAttribute("warningMessage", "Password is to short: < 5 letters!");
             return "Home";
         }
 
