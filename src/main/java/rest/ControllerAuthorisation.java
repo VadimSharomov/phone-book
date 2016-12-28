@@ -46,11 +46,11 @@ public class ControllerAuthorisation {
         }
 
         if ((login == null) || (login.length() < 3)) {
-            model.addAttribute("warningMessage", "Login is to short: < 3 letters!");
+            model.addAttribute("warningMessage", "Login is incorrect!");
             return "Home";
         }
         if ((password == null) || (password.length() < 5)) {
-            model.addAttribute("warningMessage", "Password is to short: < 5 letters!");
+            model.addAttribute("warningMessage", "Password is incorrect!");
             return "Home";
         }
 
@@ -89,13 +89,13 @@ public class ControllerAuthorisation {
         if ((fullName == null) || (fullName.length() < 5)) {
             model.addAttribute("myipaddress", Constants.getMyIP());
             model.addAttribute("idSessionValue", String.valueOf(UtilsRest.generateIdSession()));
-            model.addAttribute("warningMessage", "Full name is to short!");
+            model.addAttribute("warningMessage", "Full name is to short: < 5 letters!");
             return "RegistrationPage";
         }
         if ((login == null) || (login.length() < 3)) {
             model.addAttribute("myipaddress", Constants.getMyIP());
             model.addAttribute("idSessionValue", String.valueOf(UtilsRest.generateIdSession()));
-            model.addAttribute("warningMessage", "Login is to short!");
+            model.addAttribute("warningMessage", "Login is to short: < 3 letters!");
             return "RegistrationPage";
         }
 
@@ -110,7 +110,7 @@ public class ControllerAuthorisation {
         if ((password == null) || (password.length() < 5)) {
             model.addAttribute("myipaddress", Constants.getMyIP());
             model.addAttribute("idSessionValue", String.valueOf(UtilsRest.generateIdSession()));
-            model.addAttribute("warningMessage", "Password is to short!");
+            model.addAttribute("warningMessage", "Password is to short: < 5 letters!");
             return "RegistrationPage";
         }
 

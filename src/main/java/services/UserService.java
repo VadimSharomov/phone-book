@@ -24,10 +24,9 @@ public class UserService {
     private Map<String, UserDAO> daoServices;
 
     public void setDataSource(String typeDB, String pathToFileDB) {
-        this.dao = daoServices.get("user" + typeDB.toLowerCase());
-        if ("mysql".equals(typeDB.toLowerCase()) || "xml".equals(typeDB.toLowerCase()) || "json".equals(typeDB.toLowerCase())) {
-            this.dao.setTypeDB(pathToFileDB);
-        } else {
+        this.dao = daoServices.get("user" + typeDB);
+        this.dao.setTypeDB(pathToFileDB);
+        if (!Constants.getPosibleTypesDB().contains(typeDB)) {
             logger.error("Type data base is not known: '" + typeDB + "'. Refer parameter 'typeDB' in config file.");
             System.exit(1);
         }

@@ -15,6 +15,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public final class Constants {
     private final static Logger logger = getLogger(Constants.class);
     private static String typeDB;
+    private static List<String> posibleTypesDB = new ArrayList<>();
     private static String pathToDBFiles;
     private static String myIP;
     private static List<Long> initIdSessionList = new ArrayList<>();
@@ -24,6 +25,9 @@ public final class Constants {
     private static final String PATTERN_EMAIL_REGEXP = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
 
     static {
+        posibleTypesDB.add("mysql");
+        posibleTypesDB.add("xml");
+        posibleTypesDB.add("json");
         try {
             Constants.myIP = getLocalHost().getHostAddress();
             logger.info("Got ip address: '" + Constants.myIP + "'");
@@ -31,6 +35,10 @@ public final class Constants {
             logger.error("Not got ip address!", e.getMessage());
             System.exit(1);
         }
+    }
+
+    public static List<String> getPosibleTypesDB() {
+        return posibleTypesDB;
     }
 
     public static String getPathToDBFiles() {

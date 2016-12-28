@@ -58,7 +58,7 @@ public class StartController {
                 properties.load(input);
                 logger.info("*** Config file has read '" + pathToConfigFile + "'");
                 Constants.setPathToDBFiles(properties.getProperty("pathToDBFiles"));
-                Constants.setTypeDB(properties.getProperty("typeDB"));
+                Constants.setTypeDB(properties.getProperty("typeDB").toLowerCase());
                 userService.setDataSource(Constants.getTypeDB(), Constants.getPathToDBFiles());
                 contactService.setDataSource(Constants.getTypeDB(), Constants.getPathToDBFiles());
                 input.close();

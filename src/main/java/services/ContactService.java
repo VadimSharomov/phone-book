@@ -24,10 +24,9 @@ public class ContactService {
     private Map<String, ContactDAO> daoServices;
 
     public void setDataSource(String typeDB, String pathToFileDB) {
-        this.dao = daoServices.get("contact" + typeDB.toLowerCase());
-        if ("mysql".equals(typeDB.toLowerCase()) || "xml".equals(typeDB.toLowerCase()) || "json".equals(typeDB.toLowerCase())) {
-            this.dao.setTypeDB(pathToFileDB);
-        } else {
+        this.dao = daoServices.get("contact" + typeDB);
+        this.dao.setTypeDB(pathToFileDB);
+        if (!Constants.getPosibleTypesDB().contains(typeDB)) {
             logger.error("Type data base is not known: '" + typeDB + "'. Refer parameter 'typeDB' in config file.");
             System.exit(1);
         }
