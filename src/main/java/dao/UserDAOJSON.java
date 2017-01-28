@@ -1,6 +1,7 @@
 package dao;
 
-import entity.User;
+import entity.CustomUser;
+import entity.UserRole;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -51,7 +52,7 @@ public class UserDAOJSON extends AbstractDAO implements UserDAO{
     }
 
     @Override
-    public void create(String fullName, String login, String password) {
+    public void create(String fullName, String login, String password, UserRole role) {
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
             JSONObject jsonObject = (JSONObject) obj;
@@ -59,10 +60,10 @@ public class UserDAOJSON extends AbstractDAO implements UserDAO{
             long maxId = getMaxId(jUsers);
             JSONObject jo = new JSONObject();
             jo.put("id", String.valueOf(maxId + 1));
-            jo.put("idsession", "1");
             jo.put("fullname", fullName);
             jo.put("login", login);
             jo.put("password", password);
+            jo.put("role", role.toString());
             jUsers.add(jo);
             jsonObject.put("users", jUsers);
 
@@ -77,15 +78,15 @@ public class UserDAOJSON extends AbstractDAO implements UserDAO{
     }
 
     @Override
-    public List<User> getAllUsers() {
-        List<User> users = new ArrayList<>();
+    public List<CustomUser> getAllUsers() {
+        List<CustomUser> customUsers = new ArrayList<>();
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
             JSONObject jsonObject = (JSONObject) obj;
-            JSONArray jUsers = (JSONArray) jsonObject.get("users");
+            JSONArray jUsers = (JSONArray) jsonObject.get("customUsers");
             for (Object o : jUsers) {
                 JSONObject jo = (JSONObject) o;
-                users.add(getUserFromJSONObject(jo));
+                customUsers.add(getUserFromJSONObject(jo));
             }
         } catch (FileNotFoundException e) {
             logger.error("Can't getAllUsers from file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
@@ -94,16 +95,16 @@ public class UserDAOJSON extends AbstractDAO implements UserDAO{
         } catch (ParseException e) {
             logger.error("Can't parse file DB for getAllUsers: '" + pathToFileDB + nameFile + "'", e.getMessage());
         }
-        return users;
+        return customUsers;
     }
 
     @Override
-    public User getUserById(String id) {
-        List<User> users = new ArrayList<>();
+    public CustomUser getUserById(String id) {
+        List<CustomUser> customUsers = new ArrayList<>();
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
             JSONObject jsonObject = (JSONObject) obj;
-            JSONArray jUsers = (JSONArray) jsonObject.get("users");
+            JSONArray jUsers = (JSONArray) jsonObject.get("customUsers");
             for (Object o : jUsers) {
                 JSONObject jo = (JSONObject) o;
                 if (Long.parseLong(jo.get("id").toString()) == Long.parseLong(id)) {
@@ -121,7 +122,7 @@ public class UserDAOJSON extends AbstractDAO implements UserDAO{
     }
 
     @Override
-    public User getByLogin(String login) {
+    public CustomUser getByLogin(String login) {
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
             JSONObject jsonObject = (JSONObject) obj;
@@ -133,50 +134,19 @@ public class UserDAOJSON extends AbstractDAO implements UserDAO{
                 }
             }
         } catch (FileNotFoundException e) {
-            logger.error("Can't getByLogin from file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
+            logger.error("Can't getUserByLogin from file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (IOException e) {
-            logger.error("Can't access to file DB in getByLogin: '" + pathToFileDB + nameFile + "'", e.getMessage());
+            logger.error("Can't access to file DB in getUserByLogin: '" + pathToFileDB + nameFile + "'", e.getMessage());
         } catch (ParseException e) {
-            logger.error("Can't parse file DB for getByLogin: '" + pathToFileDB + nameFile + "'", e.getMessage());
+            logger.error("Can't parse file DB for getUserByLogin: '" + pathToFileDB + nameFile + "'", e.getMessage());
         }
         return null;
     }
 
-    @Override
-    public void updateIdSession(long id, long idSession) {
-        List<User> users = new ArrayList<>();
-        try {
-            Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
-            JSONObject jsonObject = (JSONObject) obj;
-            JSONArray jUsers = new JSONArray();
-            users = getAllUsers();
-            for (int i = 0; i < users.size(); i++) {
-                if (users.get(i).getId() == id) {
-                    users.get(i).setIdSession(idSession);
-                }
-                JSONObject jo = new JSONObject();
-                jo.put("id", users.get(i).getId());
-                jo.put("idsession", users.get(i).getIdSession());
-                jo.put("fullname", users.get(i).getFullName());
-                jo.put("login", users.get(i).getLogin());
-                jo.put("password", users.get(i).getPassword());
-                jUsers.add(jo);
-            }
-            jsonObject.put("users", jUsers);
-            saveFile(jsonObject, pathToFileDB + nameFile);
-        } catch (FileNotFoundException e) {
-            logger.error("Can't updateIdSession from file DB: '" + pathToFileDB + nameFile + "'", e.getMessage());
-        } catch (IOException e) {
-            logger.error("Can't access to file DB in updateIdSession: '" + pathToFileDB + nameFile + "'", e.getMessage());
-        } catch (ParseException e) {
-            logger.error("Can't parse file DB for updateIdSession: '" + pathToFileDB + nameFile + "'", e.getMessage());
-        }
-    }
 
-    private User getUserFromJSONObject(JSONObject jo) {
-        User user = new User(jo.get("fullname").toString(), jo.get("login").toString(), jo.get("password").toString());
-        user.setId(Long.parseLong(jo.get("id").toString()));
-        user.setIdSession(Long.parseLong(jo.get("idsession").toString()));
-        return user;
+    private CustomUser getUserFromJSONObject(JSONObject jo) {
+        CustomUser customUser = new CustomUser(jo.get("fullname").toString(), jo.get("login").toString(), jo.get("password").toString(), UserRole.valueOf(jo.get("role").toString()));
+        customUser.setId(Long.parseLong(jo.get("id").toString()));
+        return customUser;
     }
 }

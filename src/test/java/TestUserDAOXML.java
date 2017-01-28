@@ -1,6 +1,6 @@
 import dao.UserDAO;
 import dao.UserDAOXML;
-import entity.User;
+import entity.CustomUser;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -16,10 +16,10 @@ public class TestUserDAOXML {
     @Test
     public void testUserDAOXMLgetById() {
         UserDAO userDAOXML = mock(UserDAOXML.class);
-        User user = new User();
-        when(userDAOXML.getUserById("1")).thenReturn(user);
+        CustomUser customUser = new CustomUser();
+        when(userDAOXML.getUserById("1")).thenReturn(customUser);
         when(userDAOXML.getUserById("a")).thenReturn(null);
-        assertEquals(user, userDAOXML.getUserById("1"));
+        assertEquals(customUser, userDAOXML.getUserById("1"));
         assertEquals(null, userDAOXML.getUserById("a"));
     }
 
@@ -28,18 +28,18 @@ public class TestUserDAOXML {
     @Test
     public void testUserDAOXMLgetByLogin() {
         UserDAOXML mock = mock(UserDAOXML.class);
-        User user = new User();
-        when(mock.getByLogin("login")).thenReturn(user);
+        CustomUser customUser = new CustomUser();
+        when(mock.getByLogin("login")).thenReturn(customUser);
         when(mock.getByLogin("111")).thenReturn(null);
-        assertEquals(user, mock.getByLogin("login"));
+        assertEquals(customUser, mock.getByLogin("login"));
         assertEquals(null, mock.getByLogin("111"));
     }
 
     @Test
     public void testUserDAOXMLGetAllUsers() {
         UserDAOXML mock = mock(UserDAOXML.class);
-        ArrayList<User> users = new ArrayList<>();
-        when(mock.getAllUsers()).thenReturn(users);
-        assertEquals(users, mock.getAllUsers());
+        ArrayList<CustomUser> customUsers = new ArrayList<>();
+        when(mock.getAllUsers()).thenReturn(customUsers);
+        assertEquals(customUsers, mock.getAllUsers());
     }
 }

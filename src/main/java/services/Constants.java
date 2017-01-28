@@ -18,7 +18,6 @@ public final class Constants {
     private static List<String> possibleTypesDB = new ArrayList<>();
     private static String pathToDBFiles;
     private static String myIP;
-    private static List<Long> initIdSessionList = new ArrayList<>();
     private static final String PATTERN_LOGIN_REGEXP = "[a-z,A-Z]{3,}";
     private static final String PATTERN_MOBILE_PHONE_UKR_REGEXP = "[+][3][8][0][(][3569][0-9][)][0-9]{7}";
     private static final String PATTERN_STATIONARY_PHONE_UKR_REGEXP = "[+][3][8][0][(][3456][0-9][)][0-9]{7}";
@@ -59,14 +58,6 @@ public final class Constants {
 
     public static String getMyIP() {
         return myIP;
-    }
-
-    public static List<Long> getInitIdSessionList() {
-        return initIdSessionList;
-    }
-
-    public static void addInitIdSession(Long idSession) {
-        Constants.initIdSessionList.add(idSession);
     }
 
     public static String getPatternEmail() {

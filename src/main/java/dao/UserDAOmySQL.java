@@ -1,6 +1,7 @@
 package dao;
 
-import entity.User;
+import entity.CustomUser;
+import entity.UserRole;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import repository.UserRepository;
@@ -26,27 +27,23 @@ public class UserDAOmySQL extends AbstractDAO implements UserDAO {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<CustomUser> getAllUsers() {
         return userRepository.findAll();
     }
 
     @Override
-    public User getByLogin(String login) {
+    public CustomUser getByLogin(String login) {
         return userRepository.getByLogin(login);
     }
 
     @Override
-    public User getUserById(String id) {
+    public CustomUser getUserById(String id) {
         return userRepository.getUserById(Long.valueOf(id));
     }
 
     @Override
-    public void create(String fullName, String login, String password) {
-        userRepository.save(new User(fullName, login, password));
+    public void create(String fullName, String login, String password, UserRole role) {
+        userRepository.save(new CustomUser(fullName, login, password, role));
     }
 
-    @Override
-    public void updateIdSession(long id, long idSession) {
-        userRepository.setFixedIdSessionFor(idSession, id);
-    }
 }

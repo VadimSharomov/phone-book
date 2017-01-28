@@ -1,7 +1,8 @@
 package services;
 
-import entity.User;
+import entity.CustomUser;
 import dao.UserDAO;
+import entity.UserRole;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -32,29 +33,22 @@ public class UserService {
         }
     }
 
-    public void create(String fullName, String login, String password) {
-        dao.create(fullName, login, password);
+    public void create(String fullName, String login, String password, UserRole role) {
+        dao.create(fullName, login, password, role);
     }
 
-    public List<User> getAllUsers() {
+    public List<CustomUser> getAllUsers() {
         return dao.getAllUsers();
     }
 
-    public User getByLogin(String login) {
+    public CustomUser getUserByLogin(String login) {
         return dao.getByLogin(login);
     }
 
-    public User getById(String idUser) {
+    public CustomUser getById(String idUser) {
         return dao.getUserById(idUser);
     }
 
-    public void openSession(long id, String idSession) {
-        dao.updateIdSession(id, Long.parseLong(idSession));
-    }
-
-    public void closeSession(long id) {
-        dao.updateIdSession(id, 0);
-    }
 }
 
 

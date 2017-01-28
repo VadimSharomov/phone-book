@@ -1,10 +1,12 @@
-package rest;
+package controller;
 
 import entity.Contact;
-import entity.User;
+import entity.CustomUser;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import services.Constants;
 import services.ContactService;
 import services.UserService;
-import services.UtilsRest;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,8 +30,8 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author Vadim Sharomov
  */
 @Controller
-public class StartController {
-    private final static Logger logger = getLogger(StartController.class);
+public class ControllerWork {
+    private final static Logger logger = getLogger(ControllerWork.class);
 
     @Autowired
     private UserService userService;
@@ -41,12 +42,12 @@ public class StartController {
     @Component
     public class MyBean {
         @Autowired
-        public MyBean(ApplicationArguments args)  {
+        public MyBean(ApplicationArguments args) {
             List<String> listArgs = args.getNonOptionArgs();
 
             String pathToConfigFile = "src/main/resources/application.properties";
             if (listArgs.size() == 0) {
-                logger.error("In arguments JVM not found the path to file.properties: 'application.properties'!");
+                logger.warn("In arguments JVM not found the path to file.properties: 'application.properties'!");
                 logger.info("It will use as default the path: '" + pathToConfigFile + "'");
             } else {
                 pathToConfigFile = listArgs.get(0);
@@ -77,48 +78,38 @@ public class StartController {
         return "Greeting";
     }
 
-    @RequestMapping("/")
-    public String homePage(
-            @RequestParam(value = "name", required = false) String name, Model model) {
+    @RequestMapping("/accessdenied")
+    public String accessDenied(Model model) {
         model.addAttribute("myipaddress", Constants.getMyIP());
-        model.addAttribute("idSessionValue", String.valueOf(UtilsRest.generateIdSession()));
-        return "Home";
+        model.addAttribute("warningMessage", "Access denied!");
+
+        return "Login";
     }
 
     @RequestMapping("/logout")
     public String logout(
-            @RequestParam(value = "iduser", required = false) String idUser,
-            @RequestParam(value = "idsession", required = false) String idSession, Model model) {
-        if ((idUser != null) && (idSession) != null) {
-            UtilsRest.closeSession(userService, idUser, idSession);
-        }
+            @RequestParam(value = "iduser", required = false) String idUser, Model model) {
+
         model.addAttribute("myipaddress", Constants.getMyIP());
-        model.addAttribute("idSessionValue", String.valueOf(UtilsRest.generateIdSession()));
+
+
         logger.info("Logout user with id: '" + idUser + "'");
-        return "Home";
+        return "Login";
     }
 
 
     @RequestMapping("/find")
     private String findContacts(
-            @RequestParam(value = "iduser", required = false) String idUser,
-            @RequestParam(value = "idsession", required = false) String idSession,
             @RequestParam(value = "lastname", required = false) String lastName,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "mobilePhone", required = false) String mobilePhone, Model model) {
 
-        model.addAttribute("myipaddress", Constants.getMyIP());
-        model.addAttribute("idSessionValue", idSession);
-        if ((idUser == null) || (idSession == null)) {
-            model.addAttribute("warningMessage", "Session is over, you need to login!");
-            return "Home";
-        }
-        User user = userService.getById(idUser);
-        if (UtilsRest.isSessionOver(user, idSession)) {
-            model.addAttribute("warningMessage", "Session is over, you need to login!");
-            return "Home";
-        }
-        List<Contact> contacts = contactService.getByIdUserAndName(idUser, lastName, name, mobilePhone);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String login = user.getUsername();
+
+        CustomUser dbUser = userService.getUserByLogin(login);
+
+        List<Contact> contacts = contactService.getByIdUserAndName(String.valueOf(dbUser.getId()), lastName, name, mobilePhone);
         contacts.sort(new Comparator<Contact>() {
             @Override
             public int compare(Contact o1, Contact o2) {
@@ -126,32 +117,24 @@ public class StartController {
                 return (resCompare != 0) ? resCompare : o1.getLastName().compareTo(o2.getLastName());
             }
         });
-        model.addAttribute("idUser", idUser);
-        model.addAttribute("userLogin", user.getLogin());
+        model.addAttribute("userLogin", dbUser.getLogin());
         model.addAttribute("contacts", contacts);
-        return "ViewContact";
+        return "Index";
     }
 
     @RequestMapping("/create")
-    private String createContact(
-            @RequestParam(value = "iduser", required = false) String idUser,
-            @RequestParam(value = "idsession", required = false) String idSession,
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "login", required = false) String login,
-            @RequestParam(value = "password", required = false) String password, Model model) {
+    private String createContact(Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String login = user.getUsername();
 
-        User user = userService.getById(idUser);
-        model.addAttribute("myipaddress", Constants.getMyIP());
-        model.addAttribute("idUser", idUser);
-        model.addAttribute("idSessionValue", idSession);//String.valueOf(user.getIdSession())
+        CustomUser dbUser = userService.getUserByLogin(login);
+
         model.addAttribute("titleUpdateContact", "Create contact");
         return "CreateContact";
     }
 
     @RequestMapping("/updatecontact")
     private String updateContact(
-            @RequestParam(value = "iduser", required = false) String idUser,
-            @RequestParam(value = "idsession", required = false) String idSession,
             @RequestParam(value = "idContact", required = false) String idContact,
             @RequestParam(value = "lastName", required = false) String lastName,
             @RequestParam(value = "name", required = false) String name,
@@ -161,12 +144,14 @@ public class StartController {
             @RequestParam(value = "address", required = false) String address,
             @RequestParam(value = "email", required = false) String email, Model model) {
 
-        model.addAttribute("myipaddress", Constants.getMyIP());
-        model.addAttribute("idUser", idUser);
-        model.addAttribute("idSessionValue", idSession);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String login = user.getUsername();
+
+        CustomUser dbUser = userService.getUserByLogin(login);
+
         model.addAttribute("titleUpdateContact", "Update contact");
 
-        if ((idUser != null) && (idContact != null) && (lastName != null) && (middleName != null) && (mobilePhone != null)) {
+        if ((dbUser != null) && (idContact != null) && (lastName != null) && (middleName != null) && (mobilePhone != null)) {
             if ("".equals(idContact)) {
                 if (lastName.length() < 4) {
                     model.addAttribute("warningMessage", "Last name is to short!");
@@ -203,16 +188,13 @@ public class StartController {
                         return "CreateContact";
                     }
                 }
-                contactService.create(idUser, lastName, name, middleName, mobilePhone, homePhone, address, email);
+                contactService.create(String.valueOf(dbUser.getId()), lastName, name, middleName, mobilePhone, homePhone, address, email);
             } else {
-                contactService.update(idUser, idContact, lastName, name, middleName, mobilePhone, homePhone, address, email);
+                contactService.update(String.valueOf(dbUser.getId()), idContact, lastName, name, middleName, mobilePhone, homePhone, address, email);
             }
-        } else if ((idUser == null) || (idSession == null)) {
-            model.addAttribute("warningMessage", "Session is over, you need to login!");
-            return "Home";
         }
-        User user = userService.getById(idUser);
-        List<Contact> contacts = contactService.getByIdUser(idUser);
+
+        List<Contact> contacts = contactService.getByIdUser(String.valueOf(dbUser.getId()));
         contacts.sort(new Comparator<Contact>() {
             @Override
             public int compare(Contact o1, Contact o2) {
@@ -220,8 +202,8 @@ public class StartController {
                 return (resCompare != 0) ? resCompare : o1.getLastName().compareTo(o2.getLastName());
             }
         });
-        model.addAttribute("userLogin", user.getLogin());
+        model.addAttribute("userLogin", dbUser.getLogin());
         model.addAttribute("contacts", contacts);
-        return "ViewContact";
+        return "Index";
     }
 }

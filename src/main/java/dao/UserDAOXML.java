@@ -1,6 +1,7 @@
 package dao;
 
-import entity.User;
+import entity.CustomUser;
+import entity.UserRole;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
@@ -46,31 +47,31 @@ public class UserDAOXML extends AbstractDAO implements UserDAO{
 
 
     @Override
-    public void create(String fullName, String login, String password) {
+    public void create(String fullName, String login, String password, UserRole role) {
         long maxId = getMaxId(document, pathToNode);
 
         Element classElement = document.getRootElement();
-        Element contact = classElement.addElement("user").addAttribute("id", String.valueOf(maxId + 1));
-        contact.addElement("idsession").addText("1");
-        contact.addElement("fullname").addText(fullName);
-        contact.addElement("login").addText(login);
-        contact.addElement("password").addText(password);
+        Element element = classElement.addElement("user").addAttribute("id", String.valueOf(maxId + 1));
+        element.addElement("fullname").addText(fullName);
+        element.addElement("login").addText(login);
+        element.addElement("password").addText(password);
+        element.addElement("role").addText(role.toString());
         saveDocument(document, inputFile);
     }
 
     @Override
-    public List<User> getAllUsers() {
-        ArrayList<User> users = new ArrayList<>();
+    public List<CustomUser> getAllUsers() {
+        ArrayList<CustomUser> customUsers = new ArrayList<>();
         Element classElement = document.getRootElement();
         List<Node> nodes = document.selectNodes(pathToNode);
         for (Node node : nodes) {
-            users.add(getUserFromNode(node));
+            customUsers.add(getUserFromNode(node));
         }
-        return users;
+        return customUsers;
     }
 
     @Override
-    public User getByLogin(String login) {
+    public CustomUser getByLogin(String login) {
         Element classElement = document.getRootElement();
         List<Node> nodes = document.selectNodes(pathToNode);
         for (Node node : nodes) {
@@ -81,18 +82,9 @@ public class UserDAOXML extends AbstractDAO implements UserDAO{
         return null;
     }
 
-    @Override
-    public void updateIdSession(long id, long idSession) {
-        Element classElement = document.getRootElement();
-        List<Node> nodes = document.selectNodes(pathToNode + "[@id='" + id + "']");
-        for (Node node : nodes) {
-            node.selectSingleNode("idsession").setText(String.valueOf(idSession));
-            saveDocument(document, inputFile);
-        }
-    }
 
     @Override
-    public User getUserById(String id) {
+    public CustomUser getUserById(String id) {
         Element classElement = document.getRootElement();
         List<Node> nodes = document.selectNodes(pathToNode);
         for (Node node : nodes) {
@@ -103,14 +95,14 @@ public class UserDAOXML extends AbstractDAO implements UserDAO{
         return null;
     }
 
-    private User getUserFromNode(Node node) {
-        User user = new User();
-        user.setLogin(node.selectSingleNode("login").getText());
-        user.setId(Long.parseLong(node.valueOf("@id")));
-        user.setIdSession(Long.parseLong(node.selectSingleNode("idsession").getText()));
-        user.setFullName(node.selectSingleNode("fullname").getText());
-        user.setPassword(node.selectSingleNode("password").getText());
-        return user;
+    private CustomUser getUserFromNode(Node node) {
+        CustomUser customUser = new CustomUser();
+        customUser.setLogin(node.selectSingleNode("login").getText());
+        customUser.setId(Long.parseLong(node.valueOf("@id")));
+        customUser.setFullName(node.selectSingleNode("fullname").getText());
+        customUser.setPassword(node.selectSingleNode("password").getText());
+        customUser.setRole(UserRole.valueOf(node.selectSingleNode("role").getText()));
+        return customUser;
     }
 
 }

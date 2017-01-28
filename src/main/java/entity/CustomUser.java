@@ -7,13 +7,10 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "user")
-public class User {
+public class CustomUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
-    @Column(name = "idsession")
-    private long idSession;
 
     @Column(name = "fullname")
     private String fullName;
@@ -24,9 +21,25 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    public User(){}
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
-    public User(String fullName, String login, String password) {
+    public CustomUser(){}
+
+    public CustomUser(String login, String password, UserRole role) {
+        this.login = login;
+        this.password = password;
+        this.role = role;
+    }
+
+    public CustomUser(String fullName, String login, String password, UserRole role) {
+        this.fullName = fullName;
+        this.login = login;
+        this.password = password;
+        this.role = role;
+    }
+
+    public CustomUser(String fullName, String login, String password) {
         this.fullName = fullName;
         this.login = login;
         this.password = password;
@@ -48,6 +61,14 @@ public class User {
         this.id = id;
     }
 
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
     public String getLogin() {
         return login;
     }
@@ -64,16 +85,8 @@ public class User {
         this.password = password;
     }
 
-    public long getIdSession() {
-        return idSession;
-    }
-
-    public void setIdSession(long idSession) {
-        this.idSession = idSession;
-    }
-
     @Override
     public String toString() {
-        return "User: " + fullName + " " + login;
+        return "CustomUser: " + fullName + " " + login;
     }
 }

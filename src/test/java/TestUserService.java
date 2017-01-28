@@ -1,11 +1,10 @@
 import dao.UserDAO;
-import entity.User;
+import entity.CustomUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import rest.Application;
 import services.UserService;
 
 import java.util.ArrayList;
@@ -30,20 +29,20 @@ public class TestUserService {
     @Test
     public void testUserServiceGetByLogin() {
         UserService mock = mock(UserService.class);
-        User user = new User();
-        when(mock.getByLogin("1")).thenReturn(user);
-        when(mock.getByLogin("aaa")).thenReturn(null);
-        assertEquals(user, mock.getByLogin("1"));
-        assertEquals(null, mock.getByLogin("aaa"));
+        CustomUser customUser = new CustomUser();
+        when(mock.getUserByLogin("1")).thenReturn(customUser);
+        when(mock.getUserByLogin("aaa")).thenReturn(null);
+        assertEquals(customUser, mock.getUserByLogin("1"));
+        assertEquals(null, mock.getUserByLogin("aaa"));
     }
 
     @Test
     public void testUserServiceGetById() {
         UserService mock = mock(UserService.class);
-        User user = new User();
-        when(mock.getById("1")).thenReturn(user);
+        CustomUser customUser = new CustomUser();
+        when(mock.getById("1")).thenReturn(customUser);
         when(mock.getById("aaa")).thenReturn(null);
-        assertEquals(user, mock.getById("1"));
+        assertEquals(customUser, mock.getById("1"));
         assertEquals(null, mock.getById("aaa"));
     }
 
@@ -51,8 +50,8 @@ public class TestUserService {
     @Test
     public void testUserServiceGetAllUsers() {
         UserService mock = mock(UserService.class);
-        ArrayList<User> users = new ArrayList<>();
-        when(mock.getAllUsers()).thenReturn(users);
-        assertEquals(users, mock.getAllUsers());
+        ArrayList<CustomUser> customUsers = new ArrayList<>();
+        when(mock.getAllUsers()).thenReturn(customUsers);
+        assertEquals(customUsers, mock.getAllUsers());
     }
 }

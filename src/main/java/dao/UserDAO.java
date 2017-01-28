@@ -1,6 +1,7 @@
 package dao;
 
-import entity.User;
+import entity.CustomUser;
+import entity.UserRole;
 
 import java.util.List;
 
@@ -11,13 +12,12 @@ public interface UserDAO {
 
     void setTypeDB(String pathToFileDB);
 
-    void create(String fullName, String login, String password);
+    void create(String fullName, String login, String password, UserRole role);
 
-    List<User> getAllUsers();
+    List<CustomUser> getAllUsers();
 
-    User getUserById(String id);
+    CustomUser getUserById(String id);
 
-    User getByLogin(String login);
+    CustomUser getByLogin(String login);
 
-    void updateIdSession(long id, long idSession);
 }
