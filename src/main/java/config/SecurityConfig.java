@@ -27,14 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/view").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/edit").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/find").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/create").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/updatecontact").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/registration").permitAll()
-                .antMatchers("/test").permitAll()
+                .antMatchers("/", "/view", "/edit","/find").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/create", "/updatecontact").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/test", "/registration").permitAll()
                 .and()
         .exceptionHandling().accessDeniedPage("/accessdenied")
                 .and()
@@ -49,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .logout()
                 .permitAll()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
+                .logoutSuccessUrl("/login?logout")
                 .invalidateHttpSession(true);
     }
 

@@ -7,6 +7,7 @@ import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Table;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author Vadim Sharomov
  */
 @Service("userxml")
-public class UserDAOXML extends AbstractDAO implements UserDAO{
+public class UserDAOXML extends AbstractDAO implements UserDAO {
     private final static Logger logger = getLogger(UserDAOXML.class);
     private File inputFile;
     private Document document;
@@ -47,15 +48,16 @@ public class UserDAOXML extends AbstractDAO implements UserDAO{
 
 
     @Override
-    public void create(String fullName, String login, String password, UserRole role) {
+    public void create(CustomUser user) {
         long maxId = getMaxId(document, pathToNode);
+        String tableName = user.getClass().getAnnotation(Table.class).name();
 
         Element classElement = document.getRootElement();
-        Element element = classElement.addElement("user").addAttribute("id", String.valueOf(maxId + 1));
-        element.addElement("fullname").addText(fullName);
-        element.addElement("login").addText(login);
-        element.addElement("password").addText(password);
-        element.addElement("role").addText(role.toString());
+        Element element = classElement.addElement(tableName).addAttribute("id", String.valueOf(maxId + 1));
+        element.addElement("fullname").addText(user.getFullName());
+        element.addElement("login").addText(user.getLogin());
+        element.addElement("password").addText(user.getPassword());
+        element.addElement("role").addText(user.getRole().name());
         saveDocument(document, inputFile);
     }
 

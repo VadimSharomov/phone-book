@@ -80,19 +80,13 @@ public class ControllerWork {
 
     @RequestMapping("/accessdenied")
     public String accessDenied(Model model) {
-        model.addAttribute("myipaddress", Constants.getMyIP());
         model.addAttribute("warningMessage", "Access denied!");
-
         return "Login";
     }
 
     @RequestMapping("/logout")
     public String logout(
             @RequestParam(value = "iduser", required = false) String idUser, Model model) {
-
-        model.addAttribute("myipaddress", Constants.getMyIP());
-
-
         logger.info("Logout user with id: '" + idUser + "'");
         return "Login";
     }
@@ -105,9 +99,8 @@ public class ControllerWork {
             @RequestParam(value = "mobilePhone", required = false) String mobilePhone, Model model) {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String login = user.getUsername();
 
-        CustomUser dbUser = userService.getUserByLogin(login);
+        CustomUser dbUser = userService.getUserByLogin(user.getUsername());
 
         List<Contact> contacts = contactService.getByIdUserAndName(String.valueOf(dbUser.getId()), lastName, name, mobilePhone);
         contacts.sort(new Comparator<Contact>() {
@@ -125,9 +118,7 @@ public class ControllerWork {
     @RequestMapping("/create")
     private String createContact(Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String login = user.getUsername();
-
-        CustomUser dbUser = userService.getUserByLogin(login);
+        CustomUser dbUser = userService.getUserByLogin(user.getUsername());
 
         model.addAttribute("titleUpdateContact", "Create contact");
         return "CreateContact";

@@ -1,8 +1,7 @@
 package services;
 
-import entity.CustomUser;
 import dao.UserDAO;
-import entity.UserRole;
+import entity.CustomUser;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +32,8 @@ public class UserService {
         }
     }
 
-    public void create(String fullName, String login, String password, UserRole role) {
-        dao.create(fullName, login, password, role);
+    public void create(CustomUser user) {
+        dao.create(user);
     }
 
     public List<CustomUser> getAllUsers() {

@@ -9,6 +9,7 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Table;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class UserDAOJSON extends AbstractDAO implements UserDAO{
                 JSONObject obj = new JSONObject();
                 FileWriter file = new FileWriter(f);
                 JSONArray list = new JSONArray();
-                obj.put("users", list);
+                obj.put("user", list);
 
                 file.write(obj.toJSONString());
                 file.flush();
@@ -52,20 +53,21 @@ public class UserDAOJSON extends AbstractDAO implements UserDAO{
     }
 
     @Override
-    public void create(String fullName, String login, String password, UserRole role) {
+    public void create(CustomUser user) {
+        String tableName = user.getClass().getAnnotation(Table.class).name();
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
             JSONObject jsonObject = (JSONObject) obj;
-            JSONArray jUsers = (JSONArray) jsonObject.get("users");
+            JSONArray jUsers = (JSONArray) jsonObject.get(tableName);
             long maxId = getMaxId(jUsers);
             JSONObject jo = new JSONObject();
             jo.put("id", String.valueOf(maxId + 1));
-            jo.put("fullname", fullName);
-            jo.put("login", login);
-            jo.put("password", password);
-            jo.put("role", role.toString());
+            jo.put("fullname", user.getFullName());
+            jo.put("login", user.getLogin());
+            jo.put("password", user.getPassword());
+            jo.put("role", user.getRole().name());
             jUsers.add(jo);
-            jsonObject.put("users", jUsers);
+            jsonObject.put("user", jUsers);
 
             saveFile(jsonObject, pathToFileDB + nameFile);
         } catch (FileNotFoundException e) {
@@ -126,7 +128,7 @@ public class UserDAOJSON extends AbstractDAO implements UserDAO{
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
             JSONObject jsonObject = (JSONObject) obj;
-            JSONArray jUsers = (JSONArray) jsonObject.get("users");
+            JSONArray jUsers = (JSONArray) jsonObject.get("user");
             for (Object o : jUsers) {
                 JSONObject jo = (JSONObject) o;
                 if (jo.get("login").equals(login)) {

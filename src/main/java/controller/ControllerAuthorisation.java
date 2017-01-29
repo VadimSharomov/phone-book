@@ -5,6 +5,7 @@ import entity.CustomUser;
 import entity.UserRole;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -88,18 +89,17 @@ public class ControllerAuthorisation {
         }
 
         if ((password == null) || (password.length() < 5)) {
-            model.addAttribute("myipaddress", Constants.getMyIP());
             model.addAttribute("warningMessage", "Password is to short: < 5 letters!");
             return "RegistrationPage";
         }
 
         CustomUser customUser = userService.getUserByLogin(login);
         if (customUser != null) {
-            model.addAttribute("myipaddress", Constants.getMyIP());
             model.addAttribute("warningMessage", "This login already exists!");
             return "RegistrationPage";
         }
-        userService.create(fullName, login, password, UserRole.USER);
+        String encodedPassword = (new ShaPasswordEncoder()).encodePassword(password, null);
+        userService.create(new CustomUser(fullName, login, encodedPassword, UserRole.USER));
         customUser = userService.getUserByLogin(login);
         logger.info("Registration customUser: '" + customUser + "'");
         return "index";

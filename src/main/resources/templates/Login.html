@@ -38,11 +38,16 @@
                 <strong th:text="${warningMessage}">warningMessage</strong></div>
         </th:block>
 
-        <th:block th:if="${param.error != null}">
+        <th:block th:if="${param.error}">
             <div class="alert alert-danger"><a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Wrong login or password!</strong></div>
+                <strong>Wrong login or password!</strong>
+            </div>
         </th:block>
-
+        <th:block th:if="${param.logout}">
+            <div class="alert alert-info"><a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>You have been logged out.</strong>
+            </div>
+        </th:block>
     </form>
 </div>
 </body>

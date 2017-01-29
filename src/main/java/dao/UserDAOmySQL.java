@@ -1,7 +1,6 @@
 package dao;
 
 import entity.CustomUser;
-import entity.UserRole;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import repository.UserRepository;
@@ -42,8 +41,8 @@ public class UserDAOmySQL extends AbstractDAO implements UserDAO {
     }
 
     @Override
-    public void create(String fullName, String login, String password, UserRole role) {
-        userRepository.save(new CustomUser(fullName, login, password, role));
+    public void create(CustomUser user) {
+        userRepository.save(user);
     }
 
 }
