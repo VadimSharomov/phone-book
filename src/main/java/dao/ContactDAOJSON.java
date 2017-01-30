@@ -53,7 +53,7 @@ public class ContactDAOJSON extends AbstractDAO implements ContactDAO {
     }
 
     @Override
-    public void create(String userId, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
+    public void create(Contact contact) {
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
             JSONObject jsonObject = (JSONObject) obj;
@@ -61,14 +61,14 @@ public class ContactDAOJSON extends AbstractDAO implements ContactDAO {
             long maxId = getMaxId(jContactsArray);
             JSONObject jo = new JSONObject();
             jo.put("id", String.valueOf(maxId + 1));
-            jo.put("iduser", String.valueOf(userId));
-            jo.put("lastname", lastName);
-            jo.put("name", name);
-            jo.put("middlename", middleName);
-            jo.put("mobilephone", mobilePhone);
-            jo.put("homephone", homePhone);
-            jo.put("address", address);
-            jo.put("email", email);
+            jo.put("iduser", String.valueOf(contact.getUserId()));
+            jo.put("lastname", contact.getLastName());
+            jo.put("name", contact.getName());
+            jo.put("middlename", contact.getMiddleName());
+            jo.put("mobilephone", contact.getMobilePhone());
+            jo.put("homephone", contact.getHomePhone());
+            jo.put("address", contact.getAddress());
+            jo.put("email", contact.getEmail());
             jContactsArray.add(jo);
             jsonObject.put(nameTableContacts, jContactsArray);
 
@@ -159,7 +159,7 @@ public class ContactDAOJSON extends AbstractDAO implements ContactDAO {
     }
 
     @Override
-    public void update(String id, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
+    public void update(Contact contact) {
         List<Contact> contacts;
         try {
             Object obj = parser.parse(new FileReader(pathToFileDB + nameFile));
@@ -167,14 +167,14 @@ public class ContactDAOJSON extends AbstractDAO implements ContactDAO {
             JSONArray jContactsArray = new JSONArray();
             contacts = getAllContacts();
             for (int i = 0; i < contacts.size(); i++) {
-                if (contacts.get(i).getId() == Long.parseLong(id)) {
-                    contacts.get(i).setLastName(lastName);
-                    contacts.get(i).setName(name);
-                    contacts.get(i).setMiddleName(middleName);
-                    contacts.get(i).setMobilePhone(mobilePhone);
-                    contacts.get(i).setHomePhone(homePhone);
-                    contacts.get(i).setAddress(address);
-                    contacts.get(i).setEmail(email);
+                if (contacts.get(i).getId() == contact.getId()) {
+                    contacts.get(i).setLastName(contact.getLastName());
+                    contacts.get(i).setName(contact.getName());
+                    contacts.get(i).setMiddleName(contact.getMiddleName());
+                    contacts.get(i).setMobilePhone(contact.getMobilePhone());
+                    contacts.get(i).setHomePhone(contact.getHomePhone());
+                    contacts.get(i).setAddress(contact.getAddress());
+                    contacts.get(i).setEmail(contact.getEmail());
                 }
                 JSONObject jo = new JSONObject();
                 putContactToJSONObject(jo, contacts.get(i));

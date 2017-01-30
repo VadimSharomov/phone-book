@@ -46,19 +46,19 @@ public class ContactDAOXML extends AbstractDAO implements ContactDAO{
 
 
     @Override
-    public void create(String userId, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
+    public void create(Contact contact) {
         long maxId = getMaxId(document, pathToNode);
 
         Element classElement = document.getRootElement();
-        Element contact = classElement.addElement("contact").addAttribute("id", String.valueOf(maxId + 1));
-        contact.addElement("iduser").addText(userId);
-        contact.addElement("lastname").addText(lastName);
-        contact.addElement("name").addText(name);
-        contact.addElement("middlename").addText(middleName);
-        contact.addElement("mobilephone").addText(mobilePhone);
-        contact.addElement("homephone").addText(homePhone);
-        contact.addElement("address").addText(address);
-        contact.addElement("email").addText(email);
+        Element contactElement = classElement.addElement("contact").addAttribute("id", String.valueOf(maxId + 1));
+        contactElement.addElement("iduser").addText(String.valueOf(contact.getUserId()));
+        contactElement.addElement("lastname").addText(contact.getLastName());
+        contactElement.addElement("name").addText(contact.getName());
+        contactElement.addElement("middlename").addText(contact.getMiddleName());
+        contactElement.addElement("mobilephone").addText(contact.getMobilePhone());
+        contactElement.addElement("homephone").addText(contact.getHomePhone());
+        contactElement.addElement("address").addText(contact.getAddress());
+        contactElement.addElement("email").addText(contact.getEmail());
         saveDocument(document, inputFile);
     }
 
@@ -104,17 +104,17 @@ public class ContactDAOXML extends AbstractDAO implements ContactDAO{
     }
 
     @Override
-    public void update(String id, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
+    public void update(Contact contact) {
         Element classElement = document.getRootElement();
-        List<Node> nodes = document.selectNodes(pathToNode + "[@id='" + id + "']");
+        List<Node> nodes = document.selectNodes(pathToNode + "[@id='" + contact.getId() + "']");
         for (Node node : nodes) {
-            node.selectSingleNode("lastname").setText(lastName);
-            node.selectSingleNode("name").setText(name);
-            node.selectSingleNode("middlename").setText(middleName);
-            node.selectSingleNode("mobilephone").setText(mobilePhone);
-            node.selectSingleNode("homephone").setText(homePhone);
-            node.selectSingleNode("address").setText(address);
-            node.selectSingleNode("email").setText(email);
+            node.selectSingleNode("lastname").setText(contact.getLastName());
+            node.selectSingleNode("name").setText(contact.getName());
+            node.selectSingleNode("middlename").setText(contact.getMiddleName());
+            node.selectSingleNode("mobilephone").setText(contact.getMobilePhone());
+            node.selectSingleNode("homephone").setText(contact.getHomePhone());
+            node.selectSingleNode("address").setText(contact.getAddress());
+            node.selectSingleNode("email").setText(contact.getEmail());
         }
         saveDocument(document, inputFile);
     }

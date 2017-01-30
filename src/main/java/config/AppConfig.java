@@ -28,12 +28,6 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private ContactService contactService;
 
-    @Value("${hibernate.dialect}")
-    private String sqlDialect;
-
-    @Value("${hbm2ddl.auto}")
-    private String hbm2dllAuto;
-
     @Value("${typeDB}")
     private String typeDB;
 

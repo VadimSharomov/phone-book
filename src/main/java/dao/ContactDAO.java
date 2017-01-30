@@ -11,7 +11,7 @@ public interface ContactDAO {
 
     void setTypeDB(String pathToFileDB);
 
-    void create(String userId, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email);
+    void create(Contact contact);
 
     Contact getContactById(String id);
 
@@ -19,7 +19,7 @@ public interface ContactDAO {
 
     List<Contact> getByIdUserAndName(String idUser, String lastName, String name, String mobilePhone);
 
-    void update(String id, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email);
+    void update(Contact contact);
 
     void delete(String id);
 

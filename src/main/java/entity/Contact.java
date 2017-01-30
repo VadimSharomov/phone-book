@@ -51,6 +51,18 @@ public class Contact {
         this.email = email;
     }
 
+    public Contact(long userId, long id, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
+        this.userId = userId;
+        this.id = id;
+        this.lastName = lastName;
+        this.name = name;
+        this.middleName = middleName;
+        this.mobilePhone = mobilePhone;
+        this.homePhone = homePhone;
+        this.address = address;
+        this.email = email;
+    }
+
     public String getAddress() {
         return address == null ? "" : address;
     }

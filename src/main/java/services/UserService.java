@@ -25,12 +25,12 @@ public class UserService {
     private Map<String, UserDAO> daoServices;
 
     public void setDataSource(Properties properties) {
-        this.dao = daoServices.get("user" + properties.get("typeDB"));
-        this.dao.setTypeDB(properties.get("pathToDBFiles").toString());
         if (!properties.get("possibleTypesDB").toString().contains(properties.get("typeDB").toString())) {
-            logger.error("Type data base is not known: '" + properties.get("typeDB") + "'. Refer parameter 'typeDB' in config file.");
+            logger.error("Type data base is not known: '" + properties.get("typeDB") + "'. Refer parameter 'typeDB' in config file: config.properties");
             System.exit(1);
         }
+        this.dao = daoServices.get("user" + properties.get("typeDB"));
+        this.dao.setTypeDB(properties.get("pathToDBFiles").toString());
     }
 
     public void create(CustomUser user) {

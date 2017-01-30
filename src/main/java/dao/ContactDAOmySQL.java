@@ -41,13 +41,13 @@ public class ContactDAOmySQL extends AbstractDAO implements ContactDAO {
     }
 
     @Override
-    public void create(String idUser, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
-        contactRepository.save(new Contact(Long.valueOf(idUser), lastName, name, middleName, mobilePhone, homePhone, address, email));
+    public void create(Contact contact) {
+        contactRepository.save(contact);
     }
 
     @Override
-    public void update(String id, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
-        contactRepository.updateContact(lastName, name, middleName, mobilePhone, homePhone, address, email, Long.valueOf(id));
+    public void update(Contact contact) {
+        contactRepository.updateContact(contact.getLastName(), contact.getName(), contact.getMiddleName(), contact.getMobilePhone(), contact.getHomePhone(), contact.getAddress(), contact.getEmail(), contact.getId());
     }
 
     @Override

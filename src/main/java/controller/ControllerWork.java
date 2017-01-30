@@ -141,9 +141,11 @@ public class ControllerWork {
                         return "CreateContact";
                     }
                 }
-                contactService.create(String.valueOf(dbUser.getId()), lastName, name, middleName, mobilePhone, homePhone, address, email);
+                Contact contact = new Contact(dbUser.getId(), lastName, name, middleName, mobilePhone, homePhone, address, email);
+                contactService.create(contact);
             } else {
-                contactService.update(String.valueOf(dbUser.getId()), idContact, lastName, name, middleName, mobilePhone, homePhone, address, email);
+                Contact contact = new Contact(dbUser.getId(), Long.parseLong(idContact), lastName, name, middleName, mobilePhone, homePhone, address, email);
+                contactService.update(contact);
             }
         }
 

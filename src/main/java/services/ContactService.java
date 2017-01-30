@@ -25,16 +25,16 @@ public class ContactService {
     private Map<String, ContactDAO> daoServices;
 
     public void setDataSource(Properties properties) {
-        this.dao = daoServices.get("contact" + properties.get("typeDB"));
-        this.dao.setTypeDB(properties.get("pathToDBFiles").toString());
         if (!properties.get("possibleTypesDB").toString().contains(properties.get("typeDB").toString())) {
-            logger.error("Type data base is not known: '" + properties.get("typeDB") + "'. Refer parameter 'typeDB' in config file.");
+            logger.error("Type data base is not known: '" + properties.get("typeDB") + "'. Refer parameter 'typeDB' in config file: config.properties");
             System.exit(1);
         }
+        this.dao = daoServices.get("contact" + properties.get("typeDB"));
+        this.dao.setTypeDB(properties.get("pathToDBFiles").toString());
     }
 
-    public void create(String idUser, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
-        dao.create(idUser, lastName, name, middleName, mobilePhone, homePhone, address, email);
+    public void create(Contact contact) {
+        dao.create(contact);
     }
 
     public Contact getById(String idContact) {
@@ -49,8 +49,8 @@ public class ContactService {
         return dao.getByIdUserAndName(idUser, lastName, name, mobilePhone);
     }
 
-    public void update(String idUser, String idContact, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
-        dao.update(idContact, lastName, name, middleName, mobilePhone, homePhone, address, email);
+    public void update(Contact contact) {
+        dao.update(contact);
     }
 
     public void delete(String idContact) {

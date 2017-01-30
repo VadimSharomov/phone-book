@@ -117,7 +117,6 @@ public class ControllerAuthorisation {
 
         model.addAttribute("userLogin", dbUser.getLogin());
         model.addAttribute("contacts", contacts);
-
         return "Index";
     }
 
@@ -126,16 +125,18 @@ public class ControllerAuthorisation {
                                      @RequestParam(value = "delete", required = false) String isDelete, Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        CustomUser dbUser = userService.getUserByLogin(user.getUsername());
-
         if ((idContacts == null) || (idContacts.length == 0)) {
             return "redirect:/";
         }
 
-        Contact contact = contactService.getById(idContacts[0]); //only first checked is selecting
+        CustomUser dbUser = userService.getUserByLogin(user.getUsername());
         model.addAttribute("userLogin", dbUser.getLogin());
         model.addAttribute("titleUpdateContact", "Update contact");
 
+        Contact contact = contactService.getById(idContacts[0]); //only first checked is selecting
+        if (contact == null){
+            return "redirect:/";
+        }
         model.addAttribute("idContact", contact.getId());
         model.addAttribute("lastName", contact.getLastName());
         model.addAttribute("name", contact.getName());
@@ -154,8 +155,6 @@ public class ControllerAuthorisation {
                                  @RequestParam(value = "delete", required = false) String isDelete, Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        CustomUser dbUser = userService.getUserByLogin(user.getUsername());
-
         if ((idContacts == null) || (idContacts.length == 0) || (!"Delete".equals(isDelete))) {
             return "redirect:/";
         }
@@ -164,6 +163,7 @@ public class ControllerAuthorisation {
             contactService.delete(idCont);
         }
 
+        CustomUser dbUser = userService.getUserByLogin(user.getUsername());
         List<Contact> contacts = contactService.getByIdUser(String.valueOf(dbUser.getId()));
         contacts.sort(new Comparator<Contact>() {
             @Override
