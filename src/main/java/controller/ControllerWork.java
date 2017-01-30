@@ -4,24 +4,18 @@ import entity.Contact;
 import entity.CustomUser;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import services.Constants;
+import services.ConstantsRegexPattern;
 import services.ContactService;
 import services.UserService;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Properties;
 import java.util.regex.Pattern;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -39,38 +33,6 @@ public class ControllerWork {
     @Autowired
     private ContactService contactService;
 
-    @Component
-    public class MyBean {
-        @Autowired
-        public MyBean(ApplicationArguments args) {
-            List<String> listArgs = args.getNonOptionArgs();
-
-            String pathToConfigFile = "src/main/resources/application.properties";
-            if (listArgs.size() == 0) {
-                logger.warn("In arguments JVM not found the path to file.properties: 'application.properties'!");
-                logger.info("It will use as default the path: '" + pathToConfigFile + "'");
-            } else {
-                pathToConfigFile = listArgs.get(0);
-            }
-
-            try {
-                InputStream input = new FileInputStream(pathToConfigFile);
-                Properties properties = new Properties();
-                properties.load(input);
-                logger.info("*** Config file has read '" + pathToConfigFile + "'");
-                Constants.setPathToDBFiles(properties.getProperty("pathToDBFiles"));
-                Constants.setTypeDB(properties.getProperty("typeDB").toLowerCase());
-                userService.setDataSource(Constants.getTypeDB(), Constants.getPathToDBFiles());
-                contactService.setDataSource(Constants.getTypeDB(), Constants.getPathToDBFiles());
-                input.close();
-                logger.info("*** All constants have initialised");
-            } catch (IOException e) {
-                logger.error("File properties not found in this path: '" + pathToConfigFile + "'", e.getMessage());
-                System.exit(1);
-            }
-        }
-    }
-
     @RequestMapping("/test")
     public String greeting(
             @RequestParam(value = "name", required = false, defaultValue = "World") String name, Model model) {
@@ -85,9 +47,9 @@ public class ControllerWork {
     }
 
     @RequestMapping("/logout")
-    public String logout(
-            @RequestParam(value = "iduser", required = false) String idUser, Model model) {
-        logger.info("Logout user with id: '" + idUser + "'");
+    public String logout() {
+        User user = (User) SecurityContextHolder.getContext();
+        logger.info("Logout user with id: '" + user.getUsername() + "'");
         return "Login";
     }
 
@@ -160,20 +122,20 @@ public class ControllerWork {
                     model.addAttribute("warningMessage", "Mobile phone is to short!");
                     return "CreateContact";
                 }
-                Pattern p = Pattern.compile(Constants.getPatternMobilePhoneUkr());
+                Pattern p = Pattern.compile(ConstantsRegexPattern.getPatternMobilePhoneUkr());
                 if (!p.matcher(mobilePhone).matches()) {
                     model.addAttribute("warningMessage", "Mobile phone is incorrect for Ukraine!");
                     return "CreateContact";
                 }
                 if ((homePhone != null) && (!"".equals(homePhone))) {
-                    p = Pattern.compile(Constants.getPatternStationaryPhoneUkr());
+                    p = Pattern.compile(ConstantsRegexPattern.getPatternStationaryPhoneUkr());
                     if (!p.matcher(homePhone).matches()) {
                         model.addAttribute("warningMessage", "Home phone is incorrect for Ukraine!");
                         return "CreateContact";
                     }
                 }
                 if ((email != null) && (!"".equals(email))) {
-                    p = Pattern.compile(Constants.getPatternEmail(), Pattern.CASE_INSENSITIVE);
+                    p = Pattern.compile(ConstantsRegexPattern.getPatternEmail(), Pattern.CASE_INSENSITIVE);
                     if (!p.matcher(email).matches()) {
                         model.addAttribute("warningMessage", "Email is incorrect!");
                         return "CreateContact";

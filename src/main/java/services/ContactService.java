@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -23,11 +24,11 @@ public class ContactService {
     @Resource
     private Map<String, ContactDAO> daoServices;
 
-    public void setDataSource(String typeDB, String pathToFileDB) {
-        this.dao = daoServices.get("contact" + typeDB);
-        this.dao.setTypeDB(pathToFileDB);
-        if (!Constants.getPossibleTypesDB().contains(typeDB)) {
-            logger.error("Type data base is not known: '" + typeDB + "'. Refer parameter 'typeDB' in config file.");
+    public void setDataSource(Properties properties) {
+        this.dao = daoServices.get("contact" + properties.get("typeDB"));
+        this.dao.setTypeDB(properties.get("pathToDBFiles").toString());
+        if (!properties.get("possibleTypesDB").toString().contains(properties.get("typeDB").toString())) {
+            logger.error("Type data base is not known: '" + properties.get("typeDB") + "'. Refer parameter 'typeDB' in config file.");
             System.exit(1);
         }
     }

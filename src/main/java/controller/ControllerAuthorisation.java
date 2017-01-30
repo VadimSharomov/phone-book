@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import services.Constants;
+import services.ConstantsRegexPattern;
 import services.ContactService;
 import services.UserService;
 
@@ -66,24 +66,20 @@ public class ControllerAuthorisation {
             Model model) {
 
         if (fullName == null && login == null && password == null) {
-            model.addAttribute("myipaddress", Constants.getMyIP());
             return "RegistrationPage";
         }
 
         if ((fullName == null) || (fullName.length() < 5)) {
-            model.addAttribute("myipaddress", Constants.getMyIP());
             model.addAttribute("warningMessage", "Full name is to short: < 5 letters!");
             return "RegistrationPage";
         }
         if ((login == null) || (login.length() < 3)) {
-            model.addAttribute("myipaddress", Constants.getMyIP());
             model.addAttribute("warningMessage", "Login is to short: < 3 letters!");
             return "RegistrationPage";
         }
 
-        Pattern p = Pattern.compile(Constants.getPatternLogin());
+        Pattern p = Pattern.compile(ConstantsRegexPattern.getPatternLogin());
         if (!p.matcher(login).matches()) {
-            model.addAttribute("myipaddress", Constants.getMyIP());
             model.addAttribute("warningMessage", "Incorrect characters in login!");
             return "RegistrationPage";
         }
@@ -107,12 +103,9 @@ public class ControllerAuthorisation {
 
     @RequestMapping("/view")
     public String viewContacts(Model model) {
-
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String login = user.getUsername();
 
-        CustomUser dbUser = userService.getUserByLogin(login);
-
+        CustomUser dbUser = userService.getUserByLogin(user.getUsername());
         List<Contact> contacts = contactService.getByIdUser(String.valueOf(dbUser.getId()));
         contacts.sort(new Comparator<Contact>() {
             @Override
@@ -129,42 +122,58 @@ public class ControllerAuthorisation {
     }
 
     @RequestMapping("/edit")
-    private String editDeleteContact(@RequestParam(value = "sendcheckbox", required = false) String idContact,
+    private String editDeleteContact(@RequestParam(value = "editcheckbox", required = false) String[] idContacts,
                                      @RequestParam(value = "delete", required = false) String isDelete, Model model) {
-
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String login = user.getUsername();
 
-        CustomUser dbUser = userService.getUserByLogin(login);
+        CustomUser dbUser = userService.getUserByLogin(user.getUsername());
 
-        if (idContact == null) {
+        if ((idContacts == null) || (idContacts.length == 0)) {
             return "redirect:/";
         }
 
-        String[] idContacts = idContact.split(",");
-        if ("Delete".equals(isDelete)) {
-            for (String idCont : idContacts) {
-                contactService.delete(idCont);
-            }
-            return "index";
-        } else {
-            Contact contact = contactService.getById(idContacts[0]); //only first checked is selecting
-            model.addAttribute("myipaddress", Constants.getMyIP());
-            model.addAttribute("userLogin", dbUser.getLogin());
-            model.addAttribute("titleUpdateContact", "Update contact");
+        Contact contact = contactService.getById(idContacts[0]); //only first checked is selecting
+        model.addAttribute("userLogin", dbUser.getLogin());
+        model.addAttribute("titleUpdateContact", "Update contact");
 
-            model.addAttribute("idContact", contact.getId());
-            model.addAttribute("lastName", contact.getLastName());
-            model.addAttribute("name", contact.getName());
-            model.addAttribute("middleName", contact.getMiddleName());
-            model.addAttribute("mobilePhone", contact.getMobilePhone());
-            model.addAttribute("homePhone", contact.getHomePhone());
-            model.addAttribute("address", contact.getAddress());
-            model.addAttribute("email", contact.getEmail());
+        model.addAttribute("idContact", contact.getId());
+        model.addAttribute("lastName", contact.getLastName());
+        model.addAttribute("name", contact.getName());
+        model.addAttribute("middleName", contact.getMiddleName());
+        model.addAttribute("mobilePhone", contact.getMobilePhone());
+        model.addAttribute("homePhone", contact.getHomePhone());
+        model.addAttribute("address", contact.getAddress());
+        model.addAttribute("email", contact.getEmail());
 
-            logger.info("CustomUser edits contact : '" + dbUser + "' contact '" + contact.getId() + "'");
-            return "CreateContact";
-        }
+        logger.info("CustomUser edits contact : '" + dbUser + "' contact '" + contact.getId() + "'");
+        return "CreateContact";
     }
 
+    @RequestMapping("/delete")
+    private String deleteContact(@RequestParam(value = "deletecheckbox", required = false) String[] idContacts,
+                                 @RequestParam(value = "delete", required = false) String isDelete, Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        CustomUser dbUser = userService.getUserByLogin(user.getUsername());
+
+        if ((idContacts == null) || (idContacts.length == 0) || (!"Delete".equals(isDelete))) {
+            return "redirect:/";
+        }
+
+        for (String idCont : idContacts) {
+            contactService.delete(idCont);
+        }
+
+        List<Contact> contacts = contactService.getByIdUser(String.valueOf(dbUser.getId()));
+        contacts.sort(new Comparator<Contact>() {
+            @Override
+            public int compare(Contact o1, Contact o2) {
+                int resCompare = String.CASE_INSENSITIVE_ORDER.compare(o1.getLastName(), o2.getLastName());
+                return (resCompare != 0) ? resCompare : o1.getLastName().compareTo(o2.getLastName());
+            }
+        });
+
+        model.addAttribute("contacts", contacts);
+        return "index";
+    }
 }

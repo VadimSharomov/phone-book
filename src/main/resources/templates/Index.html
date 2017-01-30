@@ -18,9 +18,11 @@
                     checks += ar[i].getAttribute("value") + ',';
                 }
             }
-            document.getElementById("sendcheckbox").value = checks;
+            checks = checks.substr(0, checks.length - 1);
+            document.getElementById("editcheckbox").value = checks;
             if (("" != checks) && (isDelete == "Delete") && confirm("Do you want delete marked contacts?")) {
                 document.getElementById("deleteButton").value = isDelete;
+                document.getElementById("deletecheckbox").value = checks;
             }
         }
 
@@ -88,18 +90,22 @@
             <span class="glyphicon glyphicon-plus"></span> Add contact
         </button>
     </form>
-    <form style="display:inline-block;" th:action="'/edit'"
-          th:onsubmit="'return isChecked();'"
-          method="post">
-        <button type="submit" class="btn btn-default" th:onclick="'analyzeCheckBox(\'\');'">
+
+    <form style="display:inline-block;" method="post" action="/edit" onsubmit="return isChecked();">
+        <button type="submit" class="btn btn-default" onclick="analyzeCheckBox(&#39;&#39;);">
             <span class="glyphicon glyphicon-pencil"></span> Edit
         </button>
 
-        <button type="submit" class="btn btn-default" th:onclick="'javascript:analyzeCheckBox(\'Delete\');'">
+        <input type="hidden" name="editcheckbox" id="editcheckbox" value=""/>
+    </form>
+
+    <form style="display:inline-block;" method="post" action="/delete" onsubmit="return isChecked();">
+
+        <button type="submit" class="btn btn-default" onclick="javascript:analyzeCheckBox(&#39;Delete&#39;);">
             <span class="glyphicon glyphicon-trash"></span> Delete
         </button>
 
-        <input type="hidden" name="sendcheckbox" id="sendcheckbox" value=""/>
+        <input type="hidden" name="deletecheckbox" id="deletecheckbox" value=""/>
         <input type="hidden" name="delete" id="deleteButton" value=""/>
     </form>
 

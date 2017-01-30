@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/", "/view", "/edit","/find").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/create", "/updatecontact").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/create", "/delete", "/updatecontact").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/test", "/registration").permitAll()
                 .and()
         .exceptionHandling().accessDeniedPage("/accessdenied")

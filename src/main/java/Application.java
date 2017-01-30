@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EnableJpaRepositories("repository")
 @EntityScan("entity")
-@ComponentScan({"controller","services","dao","config"})
+@ComponentScan({"config", "controller", "dao", "services", "repository"})
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
