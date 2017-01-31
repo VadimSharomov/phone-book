@@ -94,7 +94,7 @@ public class ControllerAuthorisation {
             model.addAttribute("warningMessage", "This login already exists!");
             return "RegistrationPage";
         }
-        String encodedPassword = (new ShaPasswordEncoder()).encodePassword(password, null);
+        String encodedPassword = (new ShaPasswordEncoder(256)).encodePassword(password, null);
         userService.create(new CustomUser(fullName, login, encodedPassword, UserRole.USER));
         customUser = userService.getUserByLogin(login);
         logger.info("Registration customUser: '" + customUser + "'");

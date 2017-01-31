@@ -49,6 +49,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private ShaPasswordEncoder getShaPasswordEncoder(){
-        return new ShaPasswordEncoder();
+        return new ShaPasswordEncoder(256);
     }
 }
