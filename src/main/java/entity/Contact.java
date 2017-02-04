@@ -13,7 +13,7 @@ public class Contact {
     private long id;
 
     @Column(name = "iduser")
-    private long userId;
+    private long idUser;
 
     @Column(name = "lastname")
     private String lastName;
@@ -40,8 +40,8 @@ public class Contact {
 
     }
 
-    public Contact(long userId, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
-        this.userId = userId;
+    public Contact(long idUser, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
+        this.idUser = idUser;
         this.lastName = lastName;
         this.name = name;
         this.middleName = middleName;
@@ -51,8 +51,8 @@ public class Contact {
         this.email = email;
     }
 
-    public Contact(long userId, long id, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
-        this.userId = userId;
+    public Contact(long idUser, long id, String lastName, String name, String middleName, String mobilePhone, String homePhone, String address, String email) {
+        this.idUser = idUser;
         this.id = id;
         this.lastName = lastName;
         this.name = name;
@@ -127,16 +127,16 @@ public class Contact {
         this.name = name;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setIdUser(long idUser) {
+        this.idUser = idUser;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getIdUser() {
+        return idUser;
     }
 
     @Override
     public String toString() {
-        return "Contact: " + userId + " " + lastName + " " + name + " " + middleName + " " + mobilePhone + " " + address + " " + email;
+        return "Contact: " + idUser + " " + lastName + " " + name + " " + middleName + " " + mobilePhone + " " + address + " " + email;
     }
 }

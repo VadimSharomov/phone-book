@@ -51,7 +51,7 @@ public class ContactDAOXML extends AbstractDAO implements ContactDAO{
 
         Element classElement = document.getRootElement();
         Element contactElement = classElement.addElement("contact").addAttribute("id", String.valueOf(maxId + 1));
-        contactElement.addElement("iduser").addText(String.valueOf(contact.getUserId()));
+        contactElement.addElement("iduser").addText(String.valueOf(contact.getIdUser()));
         contactElement.addElement("lastname").addText(contact.getLastName());
         contactElement.addElement("name").addText(contact.getName());
         contactElement.addElement("middlename").addText(contact.getMiddleName());
@@ -132,7 +132,7 @@ public class ContactDAOXML extends AbstractDAO implements ContactDAO{
     private Contact getContactFromNode(Node node) {
         Contact contact = new Contact();
         contact.setId(Long.parseLong(node.valueOf("@id")));
-        contact.setUserId(Long.parseLong(node.selectSingleNode("iduser").getText()));
+        contact.setIdUser(Long.parseLong(node.selectSingleNode("iduser").getText()));
         contact.setLastName(node.selectSingleNode("lastname").getText());
         contact.setName(node.selectSingleNode("name").getText());
         contact.setMiddleName(node.selectSingleNode("middlename").getText());

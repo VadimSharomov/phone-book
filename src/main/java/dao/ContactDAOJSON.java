@@ -61,7 +61,7 @@ public class ContactDAOJSON extends AbstractDAO implements ContactDAO {
             long maxId = getMaxId(jContactsArray);
             JSONObject jo = new JSONObject();
             jo.put("id", String.valueOf(maxId + 1));
-            jo.put("iduser", String.valueOf(contact.getUserId()));
+            jo.put("iduser", String.valueOf(contact.getIdUser()));
             jo.put("lastname", contact.getLastName());
             jo.put("name", contact.getName());
             jo.put("middlename", contact.getMiddleName());
@@ -248,7 +248,7 @@ public class ContactDAOJSON extends AbstractDAO implements ContactDAO {
     }
 
     private void putContactToJSONObject(JSONObject jo, Contact contact) {
-        jo.put("iduser", String.valueOf(contact.getUserId()));
+        jo.put("iduser", String.valueOf(contact.getIdUser()));
         jo.put("id", contact.getId());
         jo.put("lastname", contact.getLastName());
         jo.put("name", contact.getName());
@@ -262,7 +262,7 @@ public class ContactDAOJSON extends AbstractDAO implements ContactDAO {
     private Contact getContactFromJSONObject(JSONObject jo) {
         Contact contact = new Contact();
         contact.setId(Long.parseLong(jo.get("id").toString()));
-        contact.setUserId(Long.parseLong(jo.get("iduser").toString()));
+        contact.setIdUser(Long.parseLong(jo.get("iduser").toString()));
         contact.setLastName(jo.get("lastname").toString());
         contact.setName(jo.get("name").toString());
         contact.setMiddleName(jo.get("middlename").toString());

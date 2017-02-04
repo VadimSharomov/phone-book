@@ -55,7 +55,7 @@ public class ControllerAuthorisation {
         model.addAttribute("userLogin", dbUser.getLogin());
         model.addAttribute("contacts", contacts);
 
-        return "index";
+        return "Index";
     }
 
     @RequestMapping("/registration")
@@ -97,8 +97,8 @@ public class ControllerAuthorisation {
         String encodedPassword = (new ShaPasswordEncoder(256)).encodePassword(password, null);
         userService.create(new CustomUser(fullName, login, encodedPassword, UserRole.USER));
         customUser = userService.getUserByLogin(login);
-        logger.info("Registration customUser: '" + customUser + "'");
-        return "index";
+        logger.info("Registration user: '" + customUser + "'");
+        return "Login";
     }
 
     @RequestMapping("/view")
@@ -174,6 +174,6 @@ public class ControllerAuthorisation {
         });
 
         model.addAttribute("contacts", contacts);
-        return "index";
+        return "Index";
     }
 }
