@@ -14,6 +14,7 @@ import services.ConstantsRegexPattern;
 import services.ContactService;
 import services.UserService;
 
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -36,7 +37,10 @@ public class ControllerWork {
     @RequestMapping("/test")
     public String greeting(
             @RequestParam(value = "name", required = false, defaultValue = "World") String name, Model model) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS   dd MMMM yyyy");
+        String dateTime = "Now is: " + sdf.format(System.currentTimeMillis());
         model.addAttribute("name", name);
+        model.addAttribute("dateTime", dateTime);
         return "Greeting";
     }
 
