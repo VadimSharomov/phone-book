@@ -40,7 +40,7 @@ public class ContactDAOXML extends AbstractDAO implements ContactDAO{
         try {
             document = reader.read(inputFile);
         } catch (DocumentException e) {
-            logger.error("Can't access to file DB in setTypeDB: '" + pathToFileDB + "contacts.xml" + "'", e.getMessage());
+            logger.error("Can't access to file DB in setPathToFileDB: '" + pathToFileDB + "contacts.xml" + "'", e.getMessage());
         }
     }
 

@@ -21,7 +21,7 @@ public class UserDAOmySQL extends AbstractDAO implements UserDAO {
     private UserRepository userRepository;
 
     @Override
-    public void setTypeDB(String pathToFileDB) {
+    public void setPathToFileDB(String pathToFileDB) {
 
     }
 

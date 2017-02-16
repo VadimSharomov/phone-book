@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface UserDAO {
 
-    void setTypeDB(String pathToFileDB);
+    void setPathToFileDB(String pathToFileDB);
 
     void create(CustomUser user);
 

@@ -30,7 +30,7 @@ public class UserService {
             System.exit(1);
         }
         this.dao = daoServices.get("user" + properties.get("typeDB"));
-        this.dao.setTypeDB(properties.get("pathToDBFiles").toString());
+        this.dao.setPathToFileDB(properties.get("pathToDBFiles").toString());
     }
 
     public void create(CustomUser user) {

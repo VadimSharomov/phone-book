@@ -31,7 +31,7 @@ public class UserDAOJSON extends AbstractDAO implements UserDAO{
     }
 
     @Override
-    public void setTypeDB(String pathToFileDB) {
+    public void setPathToFileDB(String pathToFileDB) {
         this.pathToFileDB = pathToFileDB;
         this.nameFile = "users.json";
         File f = new File(pathToFileDB + nameFile);
@@ -46,7 +46,7 @@ public class UserDAOJSON extends AbstractDAO implements UserDAO{
                 file.flush();
                 file.close();
             } catch (IOException e) {
-                logger.error("Can't access to file DB in setTypeDB: '" + pathToFileDB + nameFile + "'", e.getMessage());
+                logger.error("Can't access to file DB in setPathToFileDB: '" + pathToFileDB + nameFile + "'", e.getMessage());
             }
         }
 

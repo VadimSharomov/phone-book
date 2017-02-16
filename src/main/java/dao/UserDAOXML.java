@@ -30,7 +30,7 @@ public class UserDAOXML extends AbstractDAO implements UserDAO {
     }
 
     @Override
-    public void setTypeDB(String pathToFileDB) {
+    public void setPathToFileDB(String pathToFileDB) {
         this.inputFile = new File(pathToFileDB + "users.xml");
         this.pathToNode = "/class/user";
         File file = new File(pathToFileDB + "users.xml");
@@ -42,7 +42,7 @@ public class UserDAOXML extends AbstractDAO implements UserDAO {
         try {
             document = reader.read(inputFile);
         } catch (DocumentException e) {
-            logger.error("Can't access to file DB in setTypeDB: '" + pathToFileDB + "users.xml" + "'", e.getMessage());
+            logger.error("Can't access to file DB in setPathToFileDB: '" + pathToFileDB + "users.xml" + "'", e.getMessage());
         }
     }
 
